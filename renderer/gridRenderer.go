@@ -1,15 +1,14 @@
-package graphics
+package renderer
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/kidk/tycoon/models"
 )
 
 type GridRenderer struct {
-	grid models.Grid
+	grid Grid
 }
 
-func NewGridRenderer(grid models.Grid) GridRenderer {
+func NewGridRenderer(grid Grid) GridRenderer {
 	return GridRenderer{
 		grid: grid,
 	}

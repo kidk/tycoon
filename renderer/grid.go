@@ -1,4 +1,4 @@
-package models
+package renderer
 
 type Block struct {
 	x int
