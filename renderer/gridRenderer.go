@@ -22,5 +22,4 @@ func (gr *GridRenderer) Draw(screen *ebiten.Image) {
 	// screen.DrawImage(image, &ebiten.DrawImageOptions{
 	// 	GeoM: location,
 	// })
-
 }

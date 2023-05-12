@@ -15,7 +15,7 @@ func main() {
 	logger.Print("Starting game")
 
 	logger.Print("Setting window size and title")
-	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowSize(1920, 1080)
 	ebiten.SetWindowTitle("Hello, World!")
 	g := &Game{}
 
