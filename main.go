@@ -19,9 +19,6 @@ func main() {
 	ebiten.SetWindowTitle("Hello, World!")
 	g := &Game{}
 
-	logger.Print("Setting initial screen")
-	g.Screen = NewTextureDebugScreen()
-
 	logger.Print("Creating grid")
 	g.Grid = renderer.NewGrid(10)
 	g.Grid.FillGrid()
@@ -32,6 +29,9 @@ func main() {
 
 	logger.Print("Creating sprites")
 	data.LoadSprites(&g.SpriteCache)
+
+	logger.Print("Setting initial screen")
+	g.Screen = NewTextureDebugScreen(g.SpriteCache)
 
 	logger.Print("Creating grid renderer")
 	g.GridRenderer = renderer.NewGridRenderer(g.Grid)

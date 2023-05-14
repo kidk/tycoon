@@ -3,16 +3,30 @@ package main
 import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kidk/tycoon/graphics"
 )
 
 type TextureDebugScreen struct {
+	cabinet graphics.AnimatedSprite
 }
 
-func NewTextureDebugScreen() Screen {
-	return &TextureDebugScreen{}
+func NewTextureDebugScreen(spriteCache graphics.SpriteCache) Screen {
+	sprite := spriteCache.GetSprite("bathroom_cabinet_white")
+	cabinet := graphics.AnimatedSprite{
+		Sprite:      sprite,
+		Frames:      10,
+		Speed:       10,
+		FrameHeight: 64,
+		FrameWidth:  32,
+	}
+	return &TextureDebugScreen{
+		cabinet: cabinet,
+	}
 }
 
 func (tds *TextureDebugScreen) Update(g *Game) error {
+	tds.cabinet.Update()
+
 	return nil
 }
 
@@ -30,6 +44,8 @@ func (tds *TextureDebugScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.DrawExampleRoom(g, screen, "brown", 32, 256+32)
 	tds.DrawExampleRoom(g, screen, "grey", 32+(6*32), 256+32)
 	tds.DrawExampleRoom(g, screen, "silver", 32+(12*32), 256+32)
+
+	tds.cabinet.Draw(screen, 32, 512)
 }
 
 func (tds *TextureDebugScreen) DrawRoomTiles(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
