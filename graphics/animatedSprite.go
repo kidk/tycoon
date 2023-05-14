@@ -6,22 +6,22 @@ import (
 )
 
 type AnimatedSprite struct {
-	Sprite      *Sprite
+	sprite      *Sprite
 	Frames      int // number of frames
 	count       int // current frame
-	Speed       int // animation speed
-	FrameHeight int
-	FrameWidth  int
+	speed       int // animation speed
+	frameHeight int
+	frameWidth  int
 }
 
 func NewAnimatedSprite(sprite *Sprite, frames int, speed int) AnimatedSprite {
 	return AnimatedSprite{
-		Sprite:      sprite,
+		sprite:      sprite,
 		Frames:      frames,
 		count:       0,
-		Speed:       speed,
-		FrameHeight: 32,
-		FrameWidth:  32,
+		speed:       speed,
+		frameHeight: 32,
+		frameWidth:  32,
 	}
 }
 
@@ -31,10 +31,9 @@ func (asprite *AnimatedSprite) Update() {
 
 func (asprite *AnimatedSprite) Draw(screen *ebiten.Image, sx float64, sy float64) {
 	op := &ebiten.DrawImageOptions{}
-	//op.GeoM.Translate(-float64(asprite.FrameWidth)/2, -float64(asprite.FrameHeight)/2)
 	op.GeoM.Translate(sx, sy)
-	i := (asprite.count / asprite.Speed) % asprite.Frames
-	ttx, tty := asprite.Sprite.tx+i*asprite.FrameWidth, asprite.Sprite.ty
-	tsx, tsy := asprite.Sprite.sx+i*asprite.FrameWidth, asprite.Sprite.sy
-	screen.DrawImage(asprite.Sprite.image.SubImage(image.Rect(ttx, tty, tsx, tsy)).(*ebiten.Image), op)
+	i := (asprite.count / asprite.speed) % asprite.Frames
+	ttx, tty := asprite.sprite.tx+i*asprite.frameWidth, asprite.sprite.ty
+	tsx, tsy := asprite.sprite.sx+i*asprite.frameWidth, asprite.sprite.sy
+	screen.DrawImage(asprite.sprite.image.SubImage(image.Rect(ttx, tty, tsx, tsy)).(*ebiten.Image), op)
 }

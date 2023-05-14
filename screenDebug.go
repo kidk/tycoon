@@ -12,13 +12,7 @@ type TextureDebugScreen struct {
 
 func NewTextureDebugScreen(spriteCache graphics.SpriteCache) Screen {
 	sprite := spriteCache.GetSprite("bathroom_cabinet_white")
-	cabinet := graphics.AnimatedSprite{
-		Sprite:      sprite,
-		Frames:      10,
-		Speed:       10,
-		FrameHeight: 64,
-		FrameWidth:  32,
-	}
+	cabinet := graphics.NewAnimatedSprite(sprite, 10, 10)
 	return &TextureDebugScreen{
 		cabinet: cabinet,
 	}
@@ -31,9 +25,6 @@ func (tds *TextureDebugScreen) Update(g *Game) error {
 }
 
 func (tds *TextureDebugScreen) Draw(g *Game, screen *ebiten.Image) {
-	//ebitenutil.DebugPrint(screen, "Hello, World!")
-	//g.GridRenderer.Draw(screen)
-
 	tds.DrawExampleFloor(g, screen, "wood_light", 32, 32)
 	tds.DrawExampleFloor(g, screen, "tiles_light", 32+(32*4), 32)
 

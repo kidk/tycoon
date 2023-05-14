@@ -43,7 +43,7 @@ func (sc *SpriteCache) GetSprite(name string) *Sprite {
 		return sprite
 	}
 
-	fmt.Fprintf(os.Stderr, "Texture not found, create it first: %v\n", name)
+	_, _ = fmt.Fprintf(os.Stderr, "Texture not found, create it first: %v\n", name)
 	os.Exit(1)
 
 	return nil
