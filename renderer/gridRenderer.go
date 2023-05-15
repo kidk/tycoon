@@ -2,24 +2,37 @@ package renderer
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kidk/tycoon/graphics"
 )
 
 type GridRenderer struct {
-	grid Grid
+	spriteCache *graphics.SpriteCache
+	grid        *Grid
+	tx          int
+	ty          int
 }
 
-func NewGridRenderer(grid Grid) GridRenderer {
+func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *Grid, tx int, ty int) GridRenderer {
 	return GridRenderer{
-		grid: grid,
+		spriteCache: spriteCache,
+		grid:        grid,
+		tx:          tx,
+		ty:          ty,
 	}
 }
 
 func (gr *GridRenderer) Draw(screen *ebiten.Image) {
-	// image := ebiten.NewImage(30, 30)
-	// image.Fill(color.RGBA{0xff, 0xff, 0xff, 0xff})
-	// location := ebiten.GeoM{}
-	// location.Translate(10, 10)
-	// screen.DrawImage(image, &ebiten.DrawImageOptions{
-	// 	GeoM: location,
-	// })
+	for x := 0; x < gr.grid.size; x++ {
+		for y := 0; y < gr.grid.size; y++ {
+			block := gr.grid.blocks[x][y]
+
+			sprite := gr.spriteCache.GetSprite("error")
+			switch block.Visual.Name {
+			case "grass":
+				sprite = gr.spriteCache.GetSprite("ground_grass")
+			}
+
+			sprite.Draw(screen, float64(gr.tx+(x*32)), float64(gr.ty+(y*32)))
+		}
+	}
 }

@@ -6,9 +6,15 @@ import (
 )
 
 func LoadSprites(spriteCache *graphics.SpriteCache) {
-	floorsFile := "resources/Room_Builder_Floors_32x32.png"
+	// Exceptions
+	spriteCache.CreateSprite("error", "resources/error.png", 0, 0, 32, 32)
+
+	// Ground
+	groundFile := "resources/1_Terrains_and_Fences_32x32.png"
+	spriteCache.CreateSprite("ground_grass", groundFile, 96, 256, 96+32, 256+32)
 
 	// Floors
+	floorsFile := "resources/Room_Builder_Floors_32x32.png"
 	spriteCache.CreateSprite("floor_tiles_light", floorsFile, 32, 96, 64, 128)
 	spriteCache.CreateSprite("floor_wood_light", floorsFile, 32, 416, 64, 448)
 

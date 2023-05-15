@@ -10,7 +10,7 @@ type TextureDebugScreen struct {
 	cabinet graphics.AnimatedSprite
 }
 
-func NewTextureDebugScreen(spriteCache graphics.SpriteCache) Screen {
+func NewTextureDebugScreen(spriteCache *graphics.SpriteCache) Screen {
 	sprite := spriteCache.GetSprite("bathroom_cabinet_white")
 	cabinet := graphics.NewAnimatedSprite(sprite, 10, 10)
 	return &TextureDebugScreen{

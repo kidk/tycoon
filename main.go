@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/data"
 	"github.com/kidk/tycoon/graphics"
-	"github.com/kidk/tycoon/renderer"
 )
 
 func main() {
@@ -19,10 +18,6 @@ func main() {
 	ebiten.SetWindowTitle("Hello, World!")
 	g := &Game{}
 
-	logger.Print("Creating grid")
-	g.Grid = renderer.NewGrid(10)
-	g.Grid.FillGrid()
-
 	logger.Print("Creating image & sprite cache")
 	imageCache := graphics.NewImageCache()
 	g.SpriteCache = graphics.NewSpriteCache(imageCache)
@@ -31,10 +26,8 @@ func main() {
 	data.LoadSprites(&g.SpriteCache)
 
 	logger.Print("Setting initial screen")
-	g.Screen = NewTextureDebugScreen(g.SpriteCache)
-
-	logger.Print("Creating grid renderer")
-	g.GridRenderer = renderer.NewGridRenderer(g.Grid)
+	//g.Screen = NewTextureDebugScreen(&g.SpriteCache)
+	g.Screen = NewGameScreen(&g.SpriteCache)
 
 	logger.Print("Everything is ready, starting loops")
 	if err := ebiten.RunGame(g); err != nil {
