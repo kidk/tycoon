@@ -11,7 +11,7 @@ type TextureDebugScreen struct {
 }
 
 func NewTextureDebugScreen(spriteCache *graphics.SpriteCache) Screen {
-	sprite := spriteCache.GetSprite("bathroom_cabinet_white")
+	sprite, _ := spriteCache.GetSprite("bathroom_cabinet_white")
 	cabinet := graphics.NewAnimatedSprite(sprite, 10, 10)
 	return &TextureDebugScreen{
 		cabinet: cabinet,
@@ -40,12 +40,12 @@ func (tds *TextureDebugScreen) Draw(g *Game, screen *ebiten.Image) {
 }
 
 func (tds *TextureDebugScreen) DrawRoomTiles(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
-	wallUpLeft := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_left", name))
-	wallUpMiddle := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_middle", name))
-	wallUpRight := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_right", name))
-	wallMiddleLeft := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_left", name))
-	wallMiddleRight := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_right", name))
-	wallDown := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_down", name))
+	wallUpLeft, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_left", name))
+	wallUpMiddle, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_middle", name))
+	wallUpRight, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_right", name))
+	wallMiddleLeft, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_left", name))
+	wallMiddleRight, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_right", name))
+	wallDown, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_down", name))
 
 	wallUpLeft.Draw(screen, ox+(32*0), oy+(32*0))
 	wallUpMiddle.Draw(screen, ox+(32*1), oy+(32*0))
@@ -58,12 +58,12 @@ func (tds *TextureDebugScreen) DrawRoomTiles(g *Game, screen *ebiten.Image, name
 }
 
 func (tds *TextureDebugScreen) DrawExampleRoom(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
-	wallUpLeft := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_left", name))
-	wallUpMiddle := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_middle", name))
-	wallUpRight := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_right", name))
-	wallMiddleLeft := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_left", name))
-	wallMiddleRight := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_right", name))
-	wallDown := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_down", name))
+	wallUpLeft, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_left", name))
+	wallUpMiddle, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_middle", name))
+	wallUpRight, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_up_right", name))
+	wallMiddleLeft, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_left", name))
+	wallMiddleRight, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_middle_right", name))
+	wallDown, _ := g.SpriteCache.GetSprite(fmt.Sprintf("wall_%s_down", name))
 
 	wallUpLeft.Draw(screen, ox+(32*0), oy+(32*0))
 	wallUpMiddle.Draw(screen, ox+(32*1), oy+(32*0))
@@ -87,7 +87,7 @@ func (tds *TextureDebugScreen) DrawExampleRoom(g *Game, screen *ebiten.Image, na
 }
 
 func (tds *TextureDebugScreen) DrawExampleFloor(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
-	floor := g.SpriteCache.GetSprite(fmt.Sprintf("floor_%s", name))
+	floor, _ := g.SpriteCache.GetSprite(fmt.Sprintf("floor_%s", name))
 
 	floor.Draw(screen, ox+(32*0), oy+(32*0))
 	floor.Draw(screen, ox+(32*1), oy+(32*0))

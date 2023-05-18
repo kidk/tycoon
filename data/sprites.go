@@ -12,6 +12,7 @@ func LoadSprites(spriteCache *graphics.SpriteCache) {
 	// Ground
 	groundFile := "resources/1_Terrains_and_Fences_32x32.png"
 	spriteCache.CreateSprite("ground_grass", groundFile, 96, 256, 96+32, 256+32)
+	spriteCache.CreateSprite("ground_grass_high", groundFile, 32, 224, 32+32, 224+32)
 
 	// Floors
 	floorsFile := "resources/Room_Builder_Floors_32x32.png"

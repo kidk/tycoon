@@ -26,10 +26,9 @@ func (gr *GridRenderer) Draw(screen *ebiten.Image) {
 		for y := 0; y < gr.grid.size; y++ {
 			block := gr.grid.blocks[x][y]
 
-			sprite := gr.spriteCache.GetSprite("error")
-			switch block.Visual.Name {
-			case "grass":
-				sprite = gr.spriteCache.GetSprite("ground_grass")
+			sprite, err := gr.spriteCache.GetSprite(block.Visual.Name)
+			if err != nil {
+				sprite, _ = gr.spriteCache.GetSprite("error")
 			}
 
 			sprite.Draw(screen, float64(gr.tx+(x*32)), float64(gr.ty+(y*32)))

@@ -30,8 +30,12 @@ func (g *Grid) FillGrid() {
 	for i := 0; i < g.size; i++ {
 		for j := 0; j < g.size; j++ {
 			b := Block{x: i, y: j}
+			name := "ground_grass"
+			if i%2 == 0 || j%2 == 0 {
+				name = "ground_grass_high"
+			}
 			b.Visual = Visual{
-				Name: "grass",
+				Name: name,
 			}
 			g.blocks[i][j] = b
 		}

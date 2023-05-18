@@ -3,7 +3,6 @@ package graphics
 import (
 	"fmt"
 	"log"
-	"os"
 )
 
 type SpriteCache struct {
@@ -38,13 +37,10 @@ func (sc *SpriteCache) CreateSprite(name string, filepath string, lx int, ly int
 	sc.sprites[name] = &sprite
 }
 
-func (sc *SpriteCache) GetSprite(name string) *Sprite {
+func (sc *SpriteCache) GetSprite(name string) (*Sprite, error) {
 	if sprite, ok := sc.sprites[name]; ok {
-		return sprite
+		return sprite, nil
 	}
 
-	_, _ = fmt.Fprintf(os.Stderr, "Texture not found, create it first: %v\n", name)
-	os.Exit(1)
-
-	return nil
+	return nil, fmt.Errorf("Texture not found, create it first: %v\n", name)
 }
