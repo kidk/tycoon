@@ -13,19 +13,21 @@ import (
 )
 
 type GameScreen struct {
-	grid         engine.Grid
-	gridRenderer renderer.GridRenderer
+	state engine.Engine
+
+	floorGridRenderer    renderer.GridRenderer
+	buildingGridRenderer renderer.GridRenderer
 
 	cam *camera.Camera
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
-	grid := engine.NewGrid(30)
-	grid.FillGrid()
+	state := engine.NewEngine()
 
 	return &GameScreen{
-		grid:         grid,
-		gridRenderer: renderer.NewGridRenderer(spriteCache, &grid, 32, 32),
+		state:                state,
+		floorGridRenderer:    renderer.NewGridRenderer(spriteCache, &state.FloorGrid, 32, 32),
+		buildingGridRenderer: renderer.NewGridRenderer(spriteCache, &state.BuildingGrid, 32, 32),
 
 		cam: camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 	}
@@ -72,11 +74,17 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.cam.Surface.Clear()
 	tds.cam.Surface.Fill(color.RGBA{255, 128, 128, 255})
 
-	// Draw tiles
-	tileOps := &ebiten.DrawImageOptions{}
-	tiles := tds.gridRenderer.Draw(screen)
-	tds.cam.Surface.DrawImage(tiles, tds.cam.GetTranslation(tileOps, 0, 0))
-	tiles.Dispose()
+	// Draw ground
+	groundOps := &ebiten.DrawImageOptions{}
+	ground := tds.floorGridRenderer.Draw(screen)
+	tds.cam.Surface.DrawImage(ground, tds.cam.GetTranslation(groundOps, 0, 0))
+	ground.Dispose()
+
+	// Draw buildings
+	buildingOps := &ebiten.DrawImageOptions{}
+	building := tds.buildingGridRenderer.Draw(screen)
+	tds.cam.Surface.DrawImage(building, tds.cam.GetTranslation(buildingOps, 0, 0))
+	building.Dispose()
 
 	// Draw to screen and zoom
 	tds.cam.Blit(screen)

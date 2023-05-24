@@ -8,12 +8,12 @@ import (
 
 type GridRenderer struct {
 	spriteCache *graphics.SpriteCache
-	grid        *engine.Grid
+	grid        *engine.BlockGrid
 	tx          int
 	ty          int
 }
 
-func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *engine.Grid, tx int, ty int) GridRenderer {
+func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *engine.BlockGrid, tx int, ty int) GridRenderer {
 	return GridRenderer{
 		spriteCache: spriteCache,
 		grid:        grid,
@@ -28,7 +28,11 @@ func (gr *GridRenderer) Draw(screen *ebiten.Image) *ebiten.Image {
 		for y := 0; y < gr.grid.Size; y++ {
 			block := gr.grid.Blocks[x][y]
 
-			sprite, err := gr.spriteCache.GetSprite(block.Visual.Name)
+			if block.Type.Name == "empty" {
+				continue
+			}
+
+			sprite, err := gr.spriteCache.GetSprite(block.Type.Name)
 			if err != nil {
 				sprite, _ = gr.spriteCache.GetSprite("error")
 			}
