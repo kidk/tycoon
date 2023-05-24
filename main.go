@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/data"
 	"github.com/kidk/tycoon/graphics"
+	"log"
+	"os"
 )
 
 func main() {

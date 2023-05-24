@@ -21,7 +21,8 @@ func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *Grid, tx int, ty i
 	}
 }
 
-func (gr *GridRenderer) Draw(screen *ebiten.Image) {
+func (gr *GridRenderer) Draw(screen *ebiten.Image) *ebiten.Image {
+	image := ebiten.NewImage(gr.grid.size*32, gr.grid.size*32)
 	for x := 0; x < gr.grid.size; x++ {
 		for y := 0; y < gr.grid.size; y++ {
 			block := gr.grid.blocks[x][y]
@@ -31,7 +32,9 @@ func (gr *GridRenderer) Draw(screen *ebiten.Image) {
 				sprite, _ = gr.spriteCache.GetSprite("error")
 			}
 
-			sprite.Draw(screen, float64(gr.tx+(x*32)), float64(gr.ty+(y*32)))
+			sprite.Draw(image, float64(gr.tx+(x*32)), float64(gr.ty+(y*32)))
 		}
 	}
+
+	return image
 }

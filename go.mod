@@ -3,8 +3,8 @@ module github.com/kidk/tycoon
 go 1.20
 
 require (
-	github.com/hajimehoshi/ebiten v1.12.12
 	github.com/hajimehoshi/ebiten/v2 v2.5.3
+	github.com/melonfunction/ebiten-camera v0.0.0-20220812153034-695003d18a6d
 )
 
 require (
