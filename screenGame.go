@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
 	"github.com/kidk/tycoon/renderer"
 	camera "github.com/melonfunction/ebiten-camera"
@@ -12,14 +13,14 @@ import (
 )
 
 type GameScreen struct {
-	grid         renderer.Grid
+	grid         engine.Grid
 	gridRenderer renderer.GridRenderer
 
 	cam *camera.Camera
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
-	grid := renderer.NewGrid(30)
+	grid := engine.NewGrid(30)
 	grid.FillGrid()
 
 	return &GameScreen{

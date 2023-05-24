@@ -1,4 +1,4 @@
-package renderer
+package engine
 
 type Block struct {
 	x int
@@ -12,23 +12,23 @@ type Visual struct {
 }
 
 type Grid struct {
-	size   int
-	blocks [][]Block
+	Size   int
+	Blocks [][]Block
 }
 
 func NewGrid(size int) Grid {
-	g := Grid{size: size}
-	g.blocks = make([][]Block, size)
+	g := Grid{Size: size}
+	g.Blocks = make([][]Block, size)
 	for i := 0; i < size; i++ {
-		g.blocks[i] = make([]Block, size)
+		g.Blocks[i] = make([]Block, size)
 	}
 
 	return g
 }
 
 func (g *Grid) FillGrid() {
-	for i := 0; i < g.size; i++ {
-		for j := 0; j < g.size; j++ {
+	for i := 0; i < g.Size; i++ {
+		for j := 0; j < g.Size; j++ {
 			b := Block{x: i, y: j}
 			name := "ground_grass"
 			if i%2 == 0 || j%2 == 0 {
@@ -37,7 +37,7 @@ func (g *Grid) FillGrid() {
 			b.Visual = Visual{
 				Name: name,
 			}
-			g.blocks[i][j] = b
+			g.Blocks[i][j] = b
 		}
 	}
 }

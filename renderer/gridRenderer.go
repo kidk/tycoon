@@ -2,17 +2,18 @@ package renderer
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
 )
 
 type GridRenderer struct {
 	spriteCache *graphics.SpriteCache
-	grid        *Grid
+	grid        *engine.Grid
 	tx          int
 	ty          int
 }
 
-func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *Grid, tx int, ty int) GridRenderer {
+func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *engine.Grid, tx int, ty int) GridRenderer {
 	return GridRenderer{
 		spriteCache: spriteCache,
 		grid:        grid,
@@ -22,10 +23,10 @@ func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *Grid, tx int, ty i
 }
 
 func (gr *GridRenderer) Draw(screen *ebiten.Image) *ebiten.Image {
-	image := ebiten.NewImage(gr.grid.size*32, gr.grid.size*32)
-	for x := 0; x < gr.grid.size; x++ {
-		for y := 0; y < gr.grid.size; y++ {
-			block := gr.grid.blocks[x][y]
+	image := ebiten.NewImage(gr.grid.Size*32, gr.grid.Size*32)
+	for x := 0; x < gr.grid.Size; x++ {
+		for y := 0; y < gr.grid.Size; y++ {
+			block := gr.grid.Blocks[x][y]
 
 			sprite, err := gr.spriteCache.GetSprite(block.Visual.Name)
 			if err != nil {
