@@ -26,6 +26,22 @@ func LoadSprites(spriteCache *graphics.SpriteCache) {
 
 	// Objects
 	loadObjects(spriteCache)
+
+	// Characters
+	loadCharacter(spriteCache, "adam", "resources/Adam_32x32.png")
+	loadCharacter(spriteCache, "alex", "resources/Alex_32x32.png")
+	loadCharacter(spriteCache, "amelia", "resources/Amelia_32x32.png")
+	loadCharacter(spriteCache, "ash", "resources/Ash_32x32.png")
+	loadCharacter(spriteCache, "bob", "resources/Bob_32x32.png")
+	loadCharacter(spriteCache, "bruce", "resources/Bruce_32x32.png")
+	loadCharacter(spriteCache, "chef_alex", "resources/Chef_Alex_32x32.png")
+	loadCharacter(spriteCache, "chef_lucy", "resources/Chef_Lucy_32x32.png")
+	loadCharacter(spriteCache, "chef_molly", "resources/Chef_Molly_32x32.png")
+	loadCharacter(spriteCache, "cleaner_boy", "resources/Cleaner_boy_32x32.png")
+	loadCharacter(spriteCache, "cleaner_girl", "resources/Cleaner_girl_32x32.png")
+	loadCharacter(spriteCache, "conference_man", "resources/Conference_man_32x32.png")
+	loadCharacter(spriteCache, "conference_woman", "resources/Conference_woman_32x32.png")
+	loadCharacter(spriteCache, "samuel", "resources/Samuel_32x32.png")
 }
 
 func loadWall(spriteCache *graphics.SpriteCache, name string, ox int, oy int) {
@@ -41,4 +57,11 @@ func loadWall(spriteCache *graphics.SpriteCache, name string, ox int, oy int) {
 
 func loadObjects(spriteCache *graphics.SpriteCache) {
 	spriteCache.CreateSprite("bathroom_cabinet_white", "resources/animated_bathroom_cabinet_white_empty_32x32.png", 0, 0, 32, 64)
+}
+
+func loadCharacter(spriteCache *graphics.SpriteCache, name string, file string) {
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_right", name), file, 0, 0, 32, 64)
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_up", name), file, 0+32, 0, 32+32, 64)
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_left", name), file, 0+64, 0, 32+64, 64)
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_down", name), file, 0+96, 0, 32+96, 64)
 }

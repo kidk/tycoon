@@ -25,8 +25,8 @@ func main() {
 	data.LoadSprites(&g.SpriteCache)
 
 	logger.Print("Setting initial screen")
-	//g.Screen = NewTextureDebugScreen(&g.SpriteCache)
-	g.Screen = NewGameScreen(&g.SpriteCache)
+	g.Screen = NewTextureDebugScreen(&g.SpriteCache)
+	//g.Screen = NewGameScreen(&g.SpriteCache)
 
 	logger.Print("Everything is ready, starting loops")
 	if err := ebiten.RunGame(g); err != nil {

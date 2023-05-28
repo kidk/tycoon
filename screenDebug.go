@@ -7,14 +7,16 @@ import (
 )
 
 type TextureDebugScreen struct {
-	cabinet graphics.AnimatedSprite
+	cabinet    graphics.AnimatedSprite
+	animations []graphics.AnimatedSprite
 }
 
 func NewTextureDebugScreen(spriteCache *graphics.SpriteCache) Screen {
 	sprite, _ := spriteCache.GetSprite("bathroom_cabinet_white")
 	cabinet := graphics.NewAnimatedSprite(sprite, 10, 10)
 	return &TextureDebugScreen{
-		cabinet: cabinet,
+		cabinet:    cabinet,
+		animations: make([]graphics.AnimatedSprite, 100),
 	}
 }
 
@@ -36,7 +38,22 @@ func (tds *TextureDebugScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.DrawExampleRoom(g, screen, "grey", 32+(6*32), 256+32)
 	tds.DrawExampleRoom(g, screen, "silver", 32+(12*32), 256+32)
 
-	tds.cabinet.Draw(screen, 32, 512)
+	tds.DrawCharacter(g, screen, "adam", 32, 480+(64*1))
+	tds.DrawCharacter(g, screen, "alex", 32, 480+(64*2))
+	tds.DrawCharacter(g, screen, "amelia", 32, 480+(64*3))
+	tds.DrawCharacter(g, screen, "ash", 32, 480+(64*4))
+	tds.DrawCharacter(g, screen, "bob", 32, 480+(64*5))
+	tds.DrawCharacter(g, screen, "bruce", 32, 480+(64*6))
+	tds.DrawCharacter(g, screen, "chef_alex", 32, 480+(64*7))
+	tds.DrawCharacter(g, screen, "chef_lucy", 256, 480+(64*1))
+	tds.DrawCharacter(g, screen, "chef_molly", 256, 480+(64*2))
+	tds.DrawCharacter(g, screen, "cleaner_boy", 256, 480+(64*3))
+	tds.DrawCharacter(g, screen, "cleaner_girl", 256, 480+(64*4))
+	tds.DrawCharacter(g, screen, "conference_man", 256, 480+(64*5))
+	tds.DrawCharacter(g, screen, "conference_woman", 256, 480+(64*6))
+	tds.DrawCharacter(g, screen, "samuel", 256, 480+(64*7))
+
+	tds.cabinet.Draw(screen, 32, 512-32)
 }
 
 func (tds *TextureDebugScreen) DrawRoomTiles(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
@@ -98,4 +115,16 @@ func (tds *TextureDebugScreen) DrawExampleFloor(g *Game, screen *ebiten.Image, n
 	floor.Draw(screen, ox+(32*0), oy+(32*2))
 	floor.Draw(screen, ox+(32*1), oy+(32*2))
 	floor.Draw(screen, ox+(32*2), oy+(32*2))
+}
+
+func (tds *TextureDebugScreen) DrawCharacter(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
+	characterRight, _ := g.SpriteCache.GetSprite(fmt.Sprintf("character_%s_idle_right", name))
+	characterUp, _ := g.SpriteCache.GetSprite(fmt.Sprintf("character_%s_idle_up", name))
+	characterLeft, _ := g.SpriteCache.GetSprite(fmt.Sprintf("character_%s_idle_left", name))
+	characterDown, _ := g.SpriteCache.GetSprite(fmt.Sprintf("character_%s_idle_down", name))
+
+	characterRight.Draw(screen, ox, oy)
+	characterUp.Draw(screen, ox+32, oy)
+	characterLeft.Draw(screen, ox+64, oy)
+	characterDown.Draw(screen, ox+96, oy)
 }
