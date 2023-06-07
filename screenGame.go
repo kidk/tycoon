@@ -3,17 +3,18 @@ package main
 import (
 	"errors"
 	"fmt"
+	"image/color"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
 	"github.com/kidk/tycoon/renderer"
 	camera "github.com/melonfunction/ebiten-camera"
-	"image/color"
 )
 
 type GameScreen struct {
-	state engine.Engine
+	state *engine.Engine
 
 	floorGridRenderer    renderer.GridRenderer
 	buildingGridRenderer renderer.GridRenderer
@@ -49,7 +50,7 @@ func (tds *GameScreen) Update(g *Game) error {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyEscape) {
-		return errors.New("Normal exit through escape key")
+		return errors.New("normal exit through escape key")
 	}
 
 	// Zoom

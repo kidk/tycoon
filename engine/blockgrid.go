@@ -15,7 +15,7 @@ func NewGrid(size int) BlockGrid {
 	return g
 }
 
-func (g BlockGrid) Set(x int, y int, name string) {
+func (g *BlockGrid) Set(x int, y int, name string) {
 	b := Block{x: x, y: y}
 	b.Type = Type{
 		Name: name,

@@ -9,7 +9,7 @@ type Engine struct {
 
 }
 
-func NewEngine() Engine {
+func NewEngine() *Engine {
 	floor := NewGrid(30)
 	floor.FillGrid(func(x int, y int) string {
 		name := "ground_grass"
@@ -25,7 +25,7 @@ func NewEngine() Engine {
 	})
 	buildings.Set(10, 10, "wall_brown_up_left")
 
-	return Engine{
+	return &Engine{
 		FloorGrid:    floor,
 		BuildingGrid: buildings,
 	}
