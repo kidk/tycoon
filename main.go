@@ -13,7 +13,7 @@ func main() {
 	logger.Print("Starting game")
 
 	logger.Print("Setting window size and title")
-	ebiten.SetWindowSize(1920, 1080)
+	ebiten.SetWindowSize(1680, 980)
 	ebiten.SetWindowTitle("Hello, World!")
 	g := &Game{}
 
@@ -25,8 +25,9 @@ func main() {
 	data.LoadSprites(&g.SpriteCache)
 
 	logger.Print("Setting initial screen")
-	g.Screen = NewTextureDebugScreen(&g.SpriteCache)
+	//g.Screen = NewTextureDebugScreen(&g.SpriteCache)
 	//g.Screen = NewGameScreen(&g.SpriteCache)
+	g.Screen = NewUITestScreen(&g.SpriteCache)
 
 	logger.Print("Everything is ready, starting loops")
 	if err := ebiten.RunGame(g); err != nil {
