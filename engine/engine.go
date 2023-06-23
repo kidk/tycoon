@@ -6,7 +6,7 @@ type Engine struct {
 	BuildingGrid BlockGrid
 
 	// We have bots: guests, employees, .. with certain priorities and treats
-
+	Player *Player
 }
 
 func NewEngine() *Engine {
@@ -28,5 +28,6 @@ func NewEngine() *Engine {
 	return &Engine{
 		FloorGrid:    floor,
 		BuildingGrid: buildings,
+		Player:       NewPlayer(),
 	}
 }

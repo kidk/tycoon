@@ -1,19 +1,18 @@
-package renderer
+package graphics
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/engine"
-	"github.com/kidk/tycoon/graphics"
 )
 
 type GridRenderer struct {
-	spriteCache *graphics.SpriteCache
+	spriteCache *SpriteCache
 	grid        *engine.BlockGrid
 	tx          int
 	ty          int
 }
 
-func NewGridRenderer(spriteCache *graphics.SpriteCache, grid *engine.BlockGrid, tx int, ty int) GridRenderer {
+func NewGridRenderer(spriteCache *SpriteCache, grid *engine.BlockGrid, tx int, ty int) GridRenderer {
 	return GridRenderer{
 		spriteCache: spriteCache,
 		grid:        grid,

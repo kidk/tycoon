@@ -10,20 +10,21 @@ import (
 	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
 	"github.com/kidk/tycoon/helpers"
-	"github.com/kidk/tycoon/renderer"
 	camera "github.com/melonfunction/ebiten-camera"
 )
 
 type GameScreen struct {
 	state *engine.Engine
 
-	floorGridRenderer    renderer.GridRenderer
-	buildingGridRenderer renderer.GridRenderer
+	floorGridRenderer    graphics.GridRenderer
+	buildingGridRenderer graphics.GridRenderer
 
 	cam      *camera.Camera
 	keyboard *helpers.KeyboardHelper
 
 	buildMode bool
+
+	playerRenderer graphics.NPCRenderer
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
@@ -31,13 +32,15 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 
 	return &GameScreen{
 		state:                state,
-		floorGridRenderer:    renderer.NewGridRenderer(spriteCache, &state.FloorGrid, 32, 32),
-		buildingGridRenderer: renderer.NewGridRenderer(spriteCache, &state.BuildingGrid, 32, 32),
+		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &state.FloorGrid, 0, 0),
+		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, &state.BuildingGrid, 0, 0),
 
 		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 		keyboard: helpers.NewKeyboardHelper(),
 
 		buildMode: false,
+
+		playerRenderer: graphics.NewNPCRenderer(spriteCache, state.Player, 0, 0),
 	}
 }
 
@@ -99,6 +102,12 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	building := tds.buildingGridRenderer.Draw(screen)
 	tds.cam.Surface.DrawImage(building, tds.cam.GetTranslation(buildingOps, 0, 0))
 	building.Dispose()
+
+	// Draw unit
+	playerOps := &ebiten.DrawImageOptions{}
+	player := tds.playerRenderer.Draw(screen)
+	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, float64(0+(tds.state.Player.X*32)), float64(-32+(tds.state.Player.Y*32))))
+	player.Dispose()
 
 	// Draw to screen and zoom
 	tds.cam.Blit(screen)
