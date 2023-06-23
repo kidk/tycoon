@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
+	"github.com/kidk/tycoon/helpers"
 	"github.com/kidk/tycoon/renderer"
 	camera "github.com/melonfunction/ebiten-camera"
 )
@@ -19,7 +20,10 @@ type GameScreen struct {
 	floorGridRenderer    renderer.GridRenderer
 	buildingGridRenderer renderer.GridRenderer
 
-	cam *camera.Camera
+	cam      *camera.Camera
+	keyboard *helpers.KeyboardHelper
+
+	buildMode bool
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
@@ -30,26 +34,35 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 		floorGridRenderer:    renderer.NewGridRenderer(spriteCache, &state.FloorGrid, 32, 32),
 		buildingGridRenderer: renderer.NewGridRenderer(spriteCache, &state.BuildingGrid, 32, 32),
 
-		cam: camera.NewCamera(1920, 1080, 500, 500, 0, 1),
+		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
+		keyboard: helpers.NewKeyboardHelper(),
+
+		buildMode: false,
 	}
 }
 
 func (tds *GameScreen) Update(g *Game) error {
 	// Keyboard
-	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
+	tds.keyboard.Update()
+
+	if tds.keyboard.IsKeyPressed(ebiten.KeyArrowLeft) || tds.keyboard.IsKeyPressed(ebiten.KeyA) {
 		tds.cam.X -= 5
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
+	if tds.keyboard.IsKeyPressed(ebiten.KeyArrowRight) || tds.keyboard.IsKeyPressed(ebiten.KeyD) {
 		tds.cam.X += 5
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowUp) || ebiten.IsKeyPressed(ebiten.KeyW) {
+	if tds.keyboard.IsKeyPressed(ebiten.KeyArrowUp) || tds.keyboard.IsKeyPressed(ebiten.KeyW) {
 		tds.cam.Y -= 5
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) || ebiten.IsKeyPressed(ebiten.KeyS) {
+	if tds.keyboard.IsKeyPressed(ebiten.KeyArrowDown) || tds.keyboard.IsKeyPressed(ebiten.KeyS) {
 		tds.cam.Y += 5
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyEscape) {
+	if tds.keyboard.IsKeyPressedOnce(ebiten.KeyQ) {
+		tds.buildMode = !tds.buildMode
+	}
+
+	if tds.keyboard.IsKeyPressedOnce(ebiten.KeyEscape) {
 		return errors.New("normal exit through escape key")
 	}
 
@@ -91,9 +104,31 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.cam.Blit(screen)
 
 	ebitenutil.DebugPrint(screen,
-		fmt.Sprintf(
-			"Camera:\n  X: %3.3f\n  Y: %3.3f\n  W: %d\n  H: %d\n  Rot: %3.3f\n  Zoom: %3.3f\n"+
-				"Other:\n  FPS: %3.3f\n  MouseX: %1.0f\n  MouseY: %1.0f",
-			tds.cam.X, tds.cam.Y, tds.cam.Surface.Bounds().Size().X, tds.cam.Surface.Bounds().Size().Y, tds.cam.Rot, tds.cam.Scale, ebiten.ActualFPS(), 0, 0,
-		))
+		fmt.Sprintf(`
+		State:
+			Buildmode: %t
+		Camera:
+			X: %3.3f
+			Y: %3.3f
+			W: %d
+			H: %d
+			Rot: %3.3f
+			Zoom: %3.3f
+		Other:
+			FPS: %3.3f
+			MouseX: %1.0f
+			MouseY: %1.0f
+		`,
+			tds.buildMode,
+			tds.cam.X,
+			tds.cam.Y,
+			tds.cam.Surface.Bounds().Size().X,
+			tds.cam.Surface.Bounds().Size().Y,
+			tds.cam.Rot,
+			tds.cam.Scale,
+			ebiten.ActualFPS(),
+			0.0,
+			0.0,
+		),
+	)
 }

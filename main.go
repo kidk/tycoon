@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/data"
 	"github.com/kidk/tycoon/graphics"
-	"log"
-	"os"
 )
 
 func main() {
@@ -26,8 +27,8 @@ func main() {
 
 	logger.Print("Setting initial screen")
 	//g.Screen = NewTextureDebugScreen(&g.SpriteCache)
-	//g.Screen = NewGameScreen(&g.SpriteCache)
-	g.Screen = NewUITestScreen(&g.SpriteCache)
+	g.Screen = NewGameScreen(&g.SpriteCache)
+	//g.Screen = NewUITestScreen(&g.SpriteCache)
 
 	logger.Print("Everything is ready, starting loops")
 	if err := ebiten.RunGame(g); err != nil {
