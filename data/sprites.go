@@ -2,6 +2,7 @@ package data
 
 import (
 	"fmt"
+
 	"github.com/kidk/tycoon/graphics"
 )
 
@@ -18,6 +19,10 @@ func LoadSprites(spriteCache *graphics.SpriteCache) {
 	floorsFile := "resources/Room_Builder_Floors_32x32.png"
 	spriteCache.CreateSprite("floor_tiles_light", floorsFile, 32, 96, 64, 128)
 	spriteCache.CreateSprite("floor_wood_light", floorsFile, 32, 416, 64, 448)
+
+	// Mouse
+	mouseFile := "resources/mouse.png"
+	spriteCache.CreateSprite("mouse", mouseFile, 0, 0, 32, 32)
 
 	// Walls
 	loadWall(spriteCache, "brown", 0, 0)

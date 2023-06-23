@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -22,14 +23,19 @@ type GameScreen struct {
 	cam      *camera.Camera
 	keyboard *helpers.KeyboardHelper
 
+	mouseX, mouseY float64
+
 	buildMode bool
 
 	playerRenderer graphics.NPCRenderer
+
+	mouseTexture *graphics.Sprite
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 	state := engine.NewEngine()
 
+	mouse, _ := spriteCache.GetSprite("mouse")
 	return &GameScreen{
 		state:                state,
 		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &state.FloorGrid, 0, 0),
@@ -41,6 +47,7 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 		buildMode: false,
 
 		playerRenderer: graphics.NewNPCRenderer(spriteCache, state.Player, 0, 0),
+		mouseTexture:   mouse,
 	}
 }
 
@@ -91,23 +98,36 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.cam.Surface.Clear()
 	tds.cam.Surface.Fill(color.RGBA{255, 128, 128, 255})
 
+	// Shift camera
+
 	// Draw ground
 	groundOps := &ebiten.DrawImageOptions{}
 	ground := tds.floorGridRenderer.Draw(screen)
 	tds.cam.Surface.DrawImage(ground, tds.cam.GetTranslation(groundOps, 0, 0))
-	ground.Dispose()
+	defer ground.Dispose()
 
 	// Draw buildings
 	buildingOps := &ebiten.DrawImageOptions{}
 	building := tds.buildingGridRenderer.Draw(screen)
 	tds.cam.Surface.DrawImage(building, tds.cam.GetTranslation(buildingOps, 0, 0))
-	building.Dispose()
+	defer building.Dispose()
 
 	// Draw unit
 	playerOps := &ebiten.DrawImageOptions{}
 	player := tds.playerRenderer.Draw(screen)
 	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, float64(0+(tds.state.Player.X*32)), float64(-32+(tds.state.Player.Y*32))))
-	player.Dispose()
+	defer player.Dispose()
+
+	// Hightlight tile under mouse
+	mouseX, mouseY := tds.cam.GetCursorCoords()
+	tds.mouseX = math.Floor(float64(mouseX) / 32.0)
+	tds.mouseY = math.Floor(float64(mouseY) / 32.0)
+
+	mouseOps := &ebiten.DrawImageOptions{}
+	mouseImage := ebiten.NewImage(32, 32)
+	tds.mouseTexture.Draw(mouseImage, 0, 0)
+	tds.cam.Surface.DrawImage(mouseImage, tds.cam.GetTranslation(mouseOps, tds.mouseX*32, tds.mouseY*32))
+	defer mouseImage.Dispose()
 
 	// Draw to screen and zoom
 	tds.cam.Blit(screen)
@@ -136,8 +156,8 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 			tds.cam.Rot,
 			tds.cam.Scale,
 			ebiten.ActualFPS(),
-			0.0,
-			0.0,
+			tds.mouseX,
+			tds.mouseY,
 		),
 	)
 }
