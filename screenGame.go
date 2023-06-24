@@ -15,6 +15,8 @@ import (
 )
 
 type GameScreen struct {
+	timing helpers.TimingHelper
+
 	state *engine.Engine
 
 	floorGridRenderer    graphics.GridRenderer
@@ -33,10 +35,16 @@ type GameScreen struct {
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
+	timing := *helpers.NewTimingHelper()
+	timing.Disabled = true
+	timing.Start("NewGameScreen")
+	defer timing.Stop("NewGameScreen")
 	state := engine.NewEngine()
 
 	mouse, _ := spriteCache.GetSprite("mouse")
 	return &GameScreen{
+		timing: timing,
+
 		state:                state,
 		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &state.FloorGrid, 0, 0),
 		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, &state.BuildingGrid, 0, 0),
@@ -52,6 +60,9 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 }
 
 func (tds *GameScreen) Update(g *Game) error {
+	tds.timing.Start("Update")
+	defer tds.timing.Stop("Update")
+
 	// Keyboard
 	tds.keyboard.Update()
 
@@ -94,6 +105,9 @@ func (tds *GameScreen) Update(g *Game) error {
 }
 
 func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
+	tds.timing.Start("Draw")
+	defer tds.timing.Stop("Draw")
+
 	// Clear camera surface
 	tds.cam.Surface.Clear()
 	tds.cam.Surface.Fill(color.RGBA{255, 128, 128, 255})
