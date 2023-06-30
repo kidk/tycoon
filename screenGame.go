@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -17,15 +18,14 @@ import (
 type GameScreen struct {
 	timing helpers.TimingHelper
 
-	state *engine.Engine
+	engine *engine.Engine
 
 	floorGridRenderer    graphics.GridRenderer
 	buildingGridRenderer graphics.GridRenderer
 
 	cam      *camera.Camera
 	keyboard *helpers.KeyboardHelper
-
-	mouseX, mouseY float64
+	mouse    *helpers.MouseHelper
 
 	buildMode bool
 
@@ -45,12 +45,13 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 	return &GameScreen{
 		timing: timing,
 
-		state:                state,
+		engine:               state,
 		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &state.FloorGrid, 0, 0),
 		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, &state.BuildingGrid, 0, 0),
 
 		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 		keyboard: helpers.NewKeyboardHelper(),
+		mouse:    helpers.NewMouseHelper(),
 
 		buildMode: false,
 
@@ -65,6 +66,7 @@ func (tds *GameScreen) Update(g *Game) error {
 
 	// Keyboard
 	tds.keyboard.Update()
+	tds.mouse.Update()
 
 	if tds.keyboard.IsKeyPressed(ebiten.KeyArrowLeft) || tds.keyboard.IsKeyPressed(ebiten.KeyA) {
 		tds.cam.X -= 5
@@ -101,6 +103,21 @@ func (tds *GameScreen) Update(g *Game) error {
 		}
 	}
 
+	// Mouse
+	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton0) {
+		log.Println("Mouse left click")
+		log.Printf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
+		tds.engine.MovePlayer(int(tds.mouse.X), int(tds.mouse.Y))
+	}
+	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton1) {
+		log.Println("Mouse middle click")
+		log.Printf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
+	}
+	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton2) {
+		log.Println("Mouse right click")
+		log.Printf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
+	}
+
 	return nil
 }
 
@@ -129,18 +146,18 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	// Draw unit
 	playerOps := &ebiten.DrawImageOptions{}
 	player := tds.playerRenderer.Draw(screen)
-	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, float64(0+(tds.state.Player.X*32)), float64(-32+(tds.state.Player.Y*32))))
+	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, float64(0+(tds.engine.Player.X*32)), float64(-32+(tds.engine.Player.Y*32))))
 	defer player.Dispose()
 
 	// Hightlight tile under mouse
 	mouseX, mouseY := tds.cam.GetCursorCoords()
-	tds.mouseX = math.Floor(float64(mouseX) / 32.0)
-	tds.mouseY = math.Floor(float64(mouseY) / 32.0)
+	tds.mouse.X = math.Floor(float64(mouseX) / 32.0)
+	tds.mouse.Y = math.Floor(float64(mouseY) / 32.0)
 
 	mouseOps := &ebiten.DrawImageOptions{}
 	mouseImage := ebiten.NewImage(32, 32)
 	tds.mouseTexture.Draw(mouseImage, 0, 0)
-	tds.cam.Surface.DrawImage(mouseImage, tds.cam.GetTranslation(mouseOps, tds.mouseX*32, tds.mouseY*32))
+	tds.cam.Surface.DrawImage(mouseImage, tds.cam.GetTranslation(mouseOps, tds.mouse.X*32, tds.mouse.Y*32))
 	defer mouseImage.Dispose()
 
 	// Draw to screen and zoom
@@ -170,8 +187,8 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 			tds.cam.Rot,
 			tds.cam.Scale,
 			ebiten.ActualFPS(),
-			tds.mouseX,
-			tds.mouseY,
+			tds.mouse.X,
+			tds.mouse.Y,
 		),
 	)
 }

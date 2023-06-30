@@ -1,23 +1,26 @@
 package helpers
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
-type KeyboardHelper struct {
-	pressed map[ebiten.Key]bool
+type MouseHelper struct {
+	pressed map[ebiten.MouseButton]bool
+	X, Y    float64
 }
 
-func NewKeyboardHelper() *KeyboardHelper {
-	return &KeyboardHelper{
-		pressed: make(map[ebiten.Key]bool),
+func NewMouseHelper() *MouseHelper {
+	return &MouseHelper{
+		pressed: make(map[ebiten.MouseButton]bool),
 	}
 }
 
-func (kh *KeyboardHelper) IsKeyPressed(key ebiten.Key) bool {
-	return ebiten.IsKeyPressed(key)
+func (kh *MouseHelper) IsKeyPressed(key ebiten.MouseButton) bool {
+	return ebiten.IsMouseButtonPressed(key)
 }
 
-func (kh *KeyboardHelper) IsKeyPressedOnce(key ebiten.Key) bool {
-	isPressed := ebiten.IsKeyPressed(key)
+func (kh *MouseHelper) IsKeyPressedOnce(key ebiten.MouseButton) bool {
+	isPressed := ebiten.IsMouseButtonPressed(key)
 
 	// If key does not exist in cache, create it we current value
 	if _, ok := kh.pressed[key]; !ok {
@@ -42,9 +45,9 @@ func (kh *KeyboardHelper) IsKeyPressedOnce(key ebiten.Key) bool {
 	return result
 }
 
-func (kh *KeyboardHelper) Update() {
+func (kh *MouseHelper) Update() {
 	for key, pressed := range kh.pressed {
-		if pressed && !ebiten.IsKeyPressed(key) {
+		if pressed && !ebiten.IsMouseButtonPressed(key) {
 			kh.pressed[key] = false
 		}
 	}

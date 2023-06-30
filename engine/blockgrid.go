@@ -34,3 +34,11 @@ func (g *BlockGrid) FillGrid(nameFunc func(x int, y int) string) {
 		}
 	}
 }
+
+func (g *BlockGrid) ForEach(process func(block Block)) {
+	for index, _ := range g.Blocks {
+		for _, cel := range g.Blocks[index] {
+			process(cel)
+		}
+	}
+}
