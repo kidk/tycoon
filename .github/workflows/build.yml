@@ -13,8 +13,12 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+    steps:      
+    - name: Install xorg-dev
+      run: sudo apt install xorg-dev
+
+    - name: Grab code
+      uses: actions/checkout@v3
 
     - name: Set up Go
       uses: actions/setup-go@v3
