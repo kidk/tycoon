@@ -96,7 +96,7 @@ func (gp GridPather) PathNeighborCost(to Pather) float64 {
 }
 
 func (gp GridPather) PathEstimatedCost(to Pather) float64 {
-	toT := to.(*GridPather)
+	toT := to.(GridPather)
 	absX := toT.X - gp.X
 	if absX < 0 {
 		absX = -absX

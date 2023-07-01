@@ -53,9 +53,9 @@ func Path(from, to Pather) (path []Pather, distance float64, found bool) {
 	nm := nodeMap{}
 	nq := &priorityQueue{}
 	heap.Init(nq)
-	fromNode := nm.get(from)
-	fromNode.open = true
-	heap.Push(nq, fromNode)
+	toNode := nm.get(to)
+	toNode.open = true
+	heap.Push(nq, toNode)
 	for {
 		if nq.Len() == 0 {
 			// There's no path, return found false.
@@ -65,7 +65,7 @@ func Path(from, to Pather) (path []Pather, distance float64, found bool) {
 		current.open = false
 		current.closed = true
 
-		if current == nm.get(to) {
+		if current == nm.get(from) {
 			// Found a path to the goal.
 			p := []Pather{}
 			curr := current
@@ -89,7 +89,7 @@ func Path(from, to Pather) (path []Pather, distance float64, found bool) {
 			if !neighborNode.open && !neighborNode.closed {
 				neighborNode.cost = cost
 				neighborNode.open = true
-				neighborNode.rank = cost + neighbor.PathEstimatedCost(to)
+				neighborNode.rank = cost + neighbor.PathEstimatedCost(from)
 				neighborNode.parent = current
 				heap.Push(nq, neighborNode)
 			}
