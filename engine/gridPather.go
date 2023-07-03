@@ -36,7 +36,7 @@ func (gp GridPath) Process(grid BlockGrid, isBlocked func(block Block) bool) {
 }
 
 func (gp GridPath) Get(x int, y int) Pather {
-	if x > 0 && x < MAP_SIZE && y > 0 && y < MAP_SIZE {
+	if x >= 0 && x < MAP_SIZE && y >= 0 && y < MAP_SIZE {
 		return Pather(gp.field[x][y])
 	}
 
@@ -44,7 +44,7 @@ func (gp GridPath) Get(x int, y int) Pather {
 }
 
 func (gp GridPath) IsOpen(x int, y int) bool {
-	if x > 0 && x < MAP_SIZE && y > 0 && y < MAP_SIZE {
+	if x >= 0 && x < MAP_SIZE && y >= 0 && y < MAP_SIZE {
 		return !gp.field[x][y].Blocked
 	}
 
