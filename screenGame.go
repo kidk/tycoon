@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
-	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,6 +12,7 @@ import (
 	"github.com/kidk/tycoon/graphics"
 	"github.com/kidk/tycoon/helpers"
 	camera "github.com/melonfunction/ebiten-camera"
+	"github.com/sirupsen/logrus"
 )
 
 type GameScreen struct {
@@ -105,17 +105,17 @@ func (tds *GameScreen) Update(g *Game) error {
 
 	// Mouse
 	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton0) {
-		log.Println("Mouse left click")
-		log.Printf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
+		logrus.Debugln("Mouse left click")
+		logrus.Debugf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
 		tds.engine.MovePlayer(int(tds.mouse.X), int(tds.mouse.Y))
 	}
 	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton1) {
-		log.Println("Mouse middle click")
-		log.Printf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
+		logrus.Debugln("Mouse middle click")
+		logrus.Debugf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
 	}
 	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton2) {
-		log.Println("Mouse right click")
-		log.Printf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
+		logrus.Debugln("Mouse right click")
+		logrus.Debugf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
 	}
 
 	return nil

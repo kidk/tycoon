@@ -1,8 +1,7 @@
 package main
 
 import (
-	"log"
-	"os"
+	"github.com/sirupsen/logrus"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/data"
@@ -10,28 +9,28 @@ import (
 )
 
 func main() {
-	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
-	logger.Print("Starting game")
+	logrus.Print("Starting game")
+	logrus.SetLevel(logrus.TraceLevel)
 
-	logger.Print("Setting window size and title")
+	logrus.Print("Setting window size and title")
 	ebiten.SetWindowSize(1680, 980)
 	ebiten.SetWindowTitle("Hello, World!")
 	g := &Game{}
 
-	logger.Print("Creating image & sprite cache")
+	logrus.Print("Creating image & sprite cache")
 	imageCache := graphics.NewImageCache()
 	g.SpriteCache = graphics.NewSpriteCache(imageCache)
 
-	logger.Print("Creating sprites")
+	logrus.Print("Creating sprites")
 	data.LoadSprites(&g.SpriteCache)
 
-	logger.Print("Setting initial screen")
+	logrus.Print("Setting initial screen")
 	//g.Screen = NewTextureDebugScreen(&g.SpriteCache)
 	g.Screen = NewGameScreen(&g.SpriteCache)
 	//g.Screen = NewUITestScreen(&g.SpriteCache)
 
-	logger.Print("Everything is ready, starting loops")
+	logrus.Print("Everything is ready, starting loops")
 	if err := ebiten.RunGame(g); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }

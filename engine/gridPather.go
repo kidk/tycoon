@@ -29,7 +29,6 @@ func NewGridPath() *GridPath {
 func (gp GridPath) Process(grid BlockGrid, isBlocked func(block Block) bool) {
 	grid.ForEach(func(block Block) {
 		if isBlocked(block) {
-			print("positive")
 			gp.field[block.x][block.y].Blocked = true
 		}
 	})

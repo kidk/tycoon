@@ -1,10 +1,9 @@
 package graphics
 
 import (
-	"log"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/sirupsen/logrus"
 )
 
 type Image struct {
@@ -15,7 +14,7 @@ func NewImage(filePath string) Image {
 	image := Image{}
 	texture, _, err := ebitenutil.NewImageFromFile(filePath)
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 	image.texture = texture
 
