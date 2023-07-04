@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"github.com/sirupsen/logrus"
 )
 
 const MAP_SIZE = 30
@@ -73,19 +73,23 @@ func (engine *Engine) Update() {
 
 func (engine *Engine) MovePlayer(x int, y int) {
 	if !engine.GridPath.IsOpen(x, y) {
-		log.Println("Can't go there")
+		logrus.Infoln("Can't go there")
 		return
 	}
 
 	from := engine.GridPath.Get(engine.Player.X, engine.Player.Y)
 	to := engine.GridPath.Get(x, y)
-	log.Println(from)
-	log.Println(to)
+	logrus.WithFields(logrus.Fields{
+		"from": from,
+		"to":   to,
+	}).Traceln("Pathfinding start")
 
 	path, distance, found := Path(from, to)
-	log.Println(found)
-	log.Println(distance)
-	log.Println(path)
+	logrus.WithFields(logrus.Fields{
+		"found":    found,
+		"distance": distance,
+		"path":     path,
+	}).Traceln("Pathfinding complete")
 
 	// Assign the found path to the player
 	if found {

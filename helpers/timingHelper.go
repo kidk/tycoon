@@ -1,10 +1,11 @@
 package helpers
 
 import (
-	"log"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 //
@@ -35,7 +36,7 @@ func (th *TimingHelper) Log(message string) {
 	if th.Disabled {
 		return
 	}
-	log.Printf("%s%s\n", th.tabs(), message)
+	logrus.Printf("%s%s\n", th.tabs(), message)
 }
 
 func (th *TimingHelper) Start(key string) {
@@ -52,12 +53,12 @@ func (th *TimingHelper) Stop(key string) {
 		return
 	}
 	if key != th.previous.Peek() {
-		log.Printf("Can't stop, unknown key: %s\n", key)
+		logrus.Printf("Can't stop, unknown key: %s\n", key)
 		os.Exit(1)
 	}
 	th.previous.Pop()
 	timing := float64(time.Now().UnixMicro()-th.timings[key]) / 1000.0
-	log.Printf("%s%s: %.3f\n", th.tabs(), key, timing)
+	logrus.Printf("%s%s: %.3f\n", th.tabs(), key, timing)
 	th.depth -= 1
 }
 
