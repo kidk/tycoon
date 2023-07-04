@@ -39,7 +39,7 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 	timing.Disabled = true
 	timing.Start("NewGameScreen")
 	defer timing.Stop("NewGameScreen")
-	state := engine.NewEngine()
+	state := engine.NewEngine(ebiten.DefaultTPS)
 
 	mouse, _ := spriteCache.GetSprite("mouse")
 	return &GameScreen{
@@ -63,6 +63,9 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 func (tds *GameScreen) Update(g *Game) error {
 	tds.timing.Start("Update")
 	defer tds.timing.Stop("Update")
+
+	// Update engine
+	tds.engine.Update()
 
 	// Keyboard
 	tds.keyboard.Update()
