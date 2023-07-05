@@ -149,7 +149,7 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	// Draw unit
 	playerOps := &ebiten.DrawImageOptions{}
 	player := tds.playerRenderer.Draw(screen)
-	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, float64(0+(tds.engine.Player.X*32)), float64(-32+(tds.engine.Player.Y*32))))
+	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, float64(0+(tds.engine.Player.X*32)), float64(-32+(tds.engine.Player.Y*32)))) // correction because of unit size
 	defer player.Dispose()
 
 	// Hightlight tile under mouse

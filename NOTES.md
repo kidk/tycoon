@@ -9,7 +9,11 @@
 
 Goal: Zo minimum mogelijk doen om een werkende game te hebben. Een werkende game is:
 
-- [ ] Mannetje hebben, en kunnen bewegen
+- [x] Mannetje hebben, en kunnen bewegen
+
+  - [ ] Mannetje moet pixel per pixel bewegen, niet verspringen van positie
+
+  - [ ] Voeg een direction + idle toe aan Player. UP, DOWN, LEFT, RIGHT, IDLE
 
 - [ ] Tussen build mode en live mode kunnen wisselen (B build, G game, Q voor quickswitch)
 
