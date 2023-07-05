@@ -69,4 +69,9 @@ func loadCharacter(spriteCache *graphics.SpriteCache, name string, file string) 
 	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_up", name), file, 0+32, 0, 32+32, 64)
 	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_left", name), file, 0+64, 0, 32+64, 64)
 	spriteCache.CreateSprite(fmt.Sprintf("character_%s_idle_down", name), file, 0+96, 0, 32+96, 64)
+
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_move_right", name), file, 0, 128, 32, 192)
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_move_up", name), file, 32*6, 128, 32*6+32, 192)
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_move_left", name), file, 32*12, 128, 32*12+32, 192)
+	spriteCache.CreateSprite(fmt.Sprintf("character_%s_move_down", name), file, 32*18, 128, 32*18+32, 192)
 }

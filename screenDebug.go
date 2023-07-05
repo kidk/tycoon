@@ -2,26 +2,35 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/graphics"
 )
 
 type TextureDebugScreen struct {
-	cabinet    graphics.AnimatedSprite
-	animations []graphics.AnimatedSprite
+	animations map[string]*graphics.AnimatedSprite
 }
 
 func NewTextureDebugScreen(spriteCache *graphics.SpriteCache) Screen {
-	sprite, _ := spriteCache.GetSprite("bathroom_cabinet_white")
-	cabinet := graphics.NewAnimatedSprite(sprite, 10, 10)
 	return &TextureDebugScreen{
-		cabinet:    cabinet,
-		animations: make([]graphics.AnimatedSprite, 100),
+		animations: make(map[string]*graphics.AnimatedSprite),
 	}
 }
 
+func (tds *TextureDebugScreen) getAnimation(g *Game, name string, frames int, speed int) *graphics.AnimatedSprite {
+	if _, found := tds.animations[name]; !found {
+		sprite, _ := g.SpriteCache.GetSprite(name)
+		animation := graphics.NewAnimatedSprite(sprite, frames, speed)
+		tds.animations[name] = &animation
+	}
+
+	return tds.animations[name]
+}
+
 func (tds *TextureDebugScreen) Update(g *Game) error {
-	tds.cabinet.Update()
+	for _, animatedSprite := range tds.animations {
+		animatedSprite.Update()
+	}
 
 	return nil
 }
@@ -45,15 +54,16 @@ func (tds *TextureDebugScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.DrawCharacter(g, screen, "bob", 32, 480+(64*5))
 	tds.DrawCharacter(g, screen, "bruce", 32, 480+(64*6))
 	tds.DrawCharacter(g, screen, "chef_alex", 32, 480+(64*7))
-	tds.DrawCharacter(g, screen, "chef_lucy", 256, 480+(64*1))
-	tds.DrawCharacter(g, screen, "chef_molly", 256, 480+(64*2))
-	tds.DrawCharacter(g, screen, "cleaner_boy", 256, 480+(64*3))
-	tds.DrawCharacter(g, screen, "cleaner_girl", 256, 480+(64*4))
-	tds.DrawCharacter(g, screen, "conference_man", 256, 480+(64*5))
-	tds.DrawCharacter(g, screen, "conference_woman", 256, 480+(64*6))
-	tds.DrawCharacter(g, screen, "samuel", 256, 480+(64*7))
+	tds.DrawCharacter(g, screen, "chef_lucy", 512, 480+(64*1))
+	tds.DrawCharacter(g, screen, "chef_molly", 512, 480+(64*2))
+	tds.DrawCharacter(g, screen, "cleaner_boy", 512, 480+(64*3))
+	tds.DrawCharacter(g, screen, "cleaner_girl", 512, 480+(64*4))
+	tds.DrawCharacter(g, screen, "conference_man", 512, 480+(64*5))
+	tds.DrawCharacter(g, screen, "conference_woman", 512, 480+(64*6))
+	tds.DrawCharacter(g, screen, "samuel", 512, 480+(64*7))
 
-	tds.cabinet.Draw(screen, 32, 512-32)
+	cabinet := tds.getAnimation(g, "bathroom_cabinet_white", 10, 10)
+	cabinet.Draw(screen, 32, 512-32)
 }
 
 func (tds *TextureDebugScreen) DrawRoomTiles(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
@@ -127,4 +137,14 @@ func (tds *TextureDebugScreen) DrawCharacter(g *Game, screen *ebiten.Image, name
 	characterUp.Draw(screen, ox+32, oy)
 	characterLeft.Draw(screen, ox+64, oy)
 	characterDown.Draw(screen, ox+96, oy)
+
+	spriteUpAnimation := tds.getAnimation(g, fmt.Sprintf("character_%s_move_up", name), 5, 10)
+	spriteDownAnimation := tds.getAnimation(g, fmt.Sprintf("character_%s_move_down", name), 5, 10)
+	spriteLeftAnimation := tds.getAnimation(g, fmt.Sprintf("character_%s_move_left", name), 5, 10)
+	spriteRightAnimation := tds.getAnimation(g, fmt.Sprintf("character_%s_move_right", name), 5, 10)
+
+	spriteUpAnimation.Draw(screen, ox+160, oy)
+	spriteDownAnimation.Draw(screen, ox+192, oy)
+	spriteLeftAnimation.Draw(screen, ox+224, oy)
+	spriteRightAnimation.Draw(screen, ox+256, oy)
 }

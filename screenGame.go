@@ -67,6 +67,9 @@ func (tds *GameScreen) Update(g *Game) error {
 	// Update engine
 	tds.engine.Update()
 
+	// Update player animation
+	tds.playerRenderer.Update()
+
 	// Keyboard
 	tds.keyboard.Update()
 	tds.mouse.Update()

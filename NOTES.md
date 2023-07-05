@@ -2,6 +2,7 @@
 # Problemen
 
 - FPS neemt al drop bij grotere grids. Mogelijk omdat hij alles rendert, maar heb twijfels bij camera performance.
+- Animatie frames enzo worden nu steeds opnieuw gezet. Zou eigenlijk in spriteCache moeten zitten en /data/sprites.go
 
 # Werk
 
