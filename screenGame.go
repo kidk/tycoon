@@ -6,11 +6,13 @@ import (
 	"image/color"
 	"math"
 
+	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
 	"github.com/kidk/tycoon/helpers"
+	"github.com/kidk/tycoon/ui"
 	camera "github.com/melonfunction/ebiten-camera"
 	"github.com/sirupsen/logrus"
 )
@@ -19,6 +21,8 @@ type GameScreen struct {
 	timing helpers.TimingHelper
 
 	engine *engine.Engine
+
+	ui *ui.UITestScreen
 
 	floorGridRenderer    graphics.GridRenderer
 	buildingGridRenderer graphics.GridRenderer
@@ -30,8 +34,6 @@ type GameScreen struct {
 	buildMode bool
 
 	playerRenderer graphics.NPCRenderer
-
-	mouseTexture *graphics.Sprite
 }
 
 func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
@@ -39,24 +41,46 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 	timing.Disabled = true
 	timing.Start("NewGameScreen")
 	defer timing.Stop("NewGameScreen")
-	state := engine.NewEngine(ebiten.DefaultTPS)
 
-	mouse, _ := spriteCache.GetSprite("mouse")
+	engine := engine.NewEngine(ebiten.DefaultTPS)
+	mouse := helpers.NewMouseHelper(*spriteCache, engine)
+
+	// Set up UI and mouse listener
+	ui := ui.NewUITestScreen(spriteCache, func(event *widget.WidgetMouseButtonPressedEventArgs) {
+		if event.Button == ebiten.MouseButton0 {
+			logrus.Debugln("Mouse left click")
+			logrus.Debugf("Coordinates x: %.3f y: %.3f \n", mouse.X, mouse.Y)
+			mouse.LeftClick()
+		}
+		if event.Button == ebiten.MouseButton1 {
+			logrus.Debugln("Mouse middle click")
+			logrus.Debugf("Coordinates x: %.3f y: %.3f \n", mouse.X, mouse.Y)
+			mouse.MiddleClick()
+		}
+		if event.Button == ebiten.MouseButton2 {
+			logrus.Debugln("Mouse right click")
+			logrus.Debugf("Coordinates x: %.3f y: %.3f \n", mouse.X, mouse.Y)
+			mouse.RightClick()
+		}
+	}, mouse)
+
 	return &GameScreen{
 		timing: timing,
 
-		engine:               state,
-		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &state.FloorGrid, 0, 0),
-		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, &state.BuildingGrid, 0, 0),
+		engine: engine,
+
+		ui: ui,
+
+		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &engine.FloorGrid, 0, 0),
+		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, &engine.BuildingGrid, 0, 0),
 
 		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 		keyboard: helpers.NewKeyboardHelper(),
-		mouse:    helpers.NewMouseHelper(),
+		mouse:    mouse,
 
 		buildMode: false,
 
-		playerRenderer: graphics.NewNPCRenderer(spriteCache, state.Player, 0, 0),
-		mouseTexture:   mouse,
+		playerRenderer: graphics.NewNPCRenderer(spriteCache, engine.Player, 0, 0),
 	}
 }
 
@@ -67,12 +91,14 @@ func (tds *GameScreen) Update(g *Game) error {
 	// Update engine
 	tds.engine.Update()
 
+	// Update UI
+	tds.ui.Update()
+
 	// Update player animation
 	tds.playerRenderer.Update()
 
 	// Keyboard
 	tds.keyboard.Update()
-	tds.mouse.Update()
 
 	if tds.keyboard.IsKeyPressed(ebiten.KeyArrowLeft) || tds.keyboard.IsKeyPressed(ebiten.KeyA) {
 		tds.cam.X -= 5
@@ -107,21 +133,6 @@ func (tds *GameScreen) Update(g *Game) error {
 		if tds.cam.Scale < 0.75 {
 			tds.cam.SetZoom(0.75)
 		}
-	}
-
-	// Mouse
-	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton0) {
-		logrus.Debugln("Mouse left click")
-		logrus.Debugf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
-		tds.engine.MovePlayer(int(tds.mouse.X), int(tds.mouse.Y))
-	}
-	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton1) {
-		logrus.Debugln("Mouse middle click")
-		logrus.Debugf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
-	}
-	if tds.mouse.IsKeyPressedOnce(ebiten.MouseButton2) {
-		logrus.Debugln("Mouse right click")
-		logrus.Debugf("Coordinates x: %.3f y: %.3f \n", tds.mouse.X, tds.mouse.Y)
 	}
 
 	return nil
@@ -161,16 +172,20 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	tds.mouse.Y = math.Floor(float64(mouseY) / 32.0)
 
 	mouseOps := &ebiten.DrawImageOptions{}
-	mouseImage := ebiten.NewImage(32, 32)
-	tds.mouseTexture.Draw(mouseImage, 0, 0)
-	tds.cam.Surface.DrawImage(mouseImage, tds.cam.GetTranslation(mouseOps, tds.mouse.X*32, tds.mouse.Y*32))
-	defer mouseImage.Dispose()
+	mouse := tds.mouse.Draw(screen)
+	tds.cam.Surface.DrawImage(mouse, tds.cam.GetTranslation(mouseOps, tds.mouse.X*32, tds.mouse.Y*32))
+	defer mouse.Dispose()
 
 	// Draw to screen and zoom
 	tds.cam.Blit(screen)
 
+	// Draw UI last
+	tds.ui.Draw(screen)
+
 	ebitenutil.DebugPrint(screen,
 		fmt.Sprintf(`
+
+		
 		State:
 			Buildmode: %t
 		Camera:
