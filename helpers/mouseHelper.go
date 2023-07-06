@@ -51,6 +51,8 @@ func (kh *MouseHelper) LeftClick() {
 			kh.engine.BuildingGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
 		case "floor":
 			kh.engine.FloorGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
+		case "item":
+			kh.engine.ItemGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
 		}
 	} else {
 		kh.engine.MovePlayer(int(kh.X), int(kh.Y))

@@ -12,8 +12,8 @@ type GridRenderer struct {
 	ty          int
 }
 
-func NewGridRenderer(spriteCache *SpriteCache, grid *engine.BlockGrid, tx int, ty int) GridRenderer {
-	return GridRenderer{
+func NewGridRenderer(spriteCache *SpriteCache, grid *engine.BlockGrid, tx int, ty int) *GridRenderer {
+	return &GridRenderer{
 		spriteCache: spriteCache,
 		grid:        grid,
 		tx:          tx,

@@ -24,8 +24,9 @@ type GameScreen struct {
 
 	ui *ui.UITestScreen
 
-	floorGridRenderer    graphics.GridRenderer
-	buildingGridRenderer graphics.GridRenderer
+	floorGridRenderer    *graphics.GridRenderer
+	buildingGridRenderer *graphics.GridRenderer
+	itemsGridRenderer    *graphics.GridRenderer
 
 	cam      *camera.Camera
 	keyboard *helpers.KeyboardHelper
@@ -73,6 +74,7 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 
 		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, engine.FloorGrid, 0, 0),
 		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, engine.BuildingGrid, 0, 0),
+		itemsGridRenderer:    graphics.NewGridRenderer(spriteCache, engine.ItemGrid, 0, 0),
 
 		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 		keyboard: helpers.NewKeyboardHelper(),
@@ -159,6 +161,12 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	building := tds.buildingGridRenderer.Draw(screen)
 	tds.cam.Surface.DrawImage(building, tds.cam.GetTranslation(buildingOps, 0, 0))
 	defer building.Dispose()
+
+	// Draw items
+	itemsOps := &ebiten.DrawImageOptions{}
+	items := tds.itemsGridRenderer.Draw(screen)
+	tds.cam.Surface.DrawImage(items, tds.cam.GetTranslation(itemsOps, 0, 0))
+	defer items.Dispose()
 
 	// Draw unit
 	playerOps := &ebiten.DrawImageOptions{}

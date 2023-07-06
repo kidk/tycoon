@@ -10,6 +10,7 @@ type Engine struct {
 	// We have layers here that define ground, buildings, items, ..
 	FloorGrid    *BlockGrid
 	BuildingGrid *BlockGrid
+	ItemGrid     *BlockGrid
 
 	// Pathfinding
 	GridPath *GridPath
@@ -25,7 +26,7 @@ type Engine struct {
 func NewEngine(fps int) *Engine {
 	// Initialise the map
 	// Currently always same map
-	floor, buildings := NewBasicMap(MAP_SIZE)
+	floor, buildings, items := NewBasicMap(MAP_SIZE)
 
 	// Initialise player and bots
 	player := NewPlayer()
@@ -42,6 +43,7 @@ func NewEngine(fps int) *Engine {
 	return &Engine{
 		FloorGrid:    floor,
 		BuildingGrid: buildings,
+		ItemGrid:     items,
 		Player:       player,
 
 		GridPath:  grid,
