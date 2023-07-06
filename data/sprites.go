@@ -62,6 +62,10 @@ func loadWall(spriteCache *graphics.SpriteCache, name string, ox int, oy int) {
 
 func loadObjects(spriteCache *graphics.SpriteCache) {
 	spriteCache.CreateSprite("bathroom_cabinet_white", "resources/animated_bathroom_cabinet_white_empty_32x32.png", 0, 0, 32, 64)
+
+	genericFile := "resources/1_Generic_32x32.png"
+	spriteCache.CreateSprite("reception", genericFile, 0, 512, 64, 32+512)
+	spriteCache.CreateSprite("bed", genericFile, 320, 1888, 32+320, 64+1888)
 }
 
 func loadCharacter(spriteCache *graphics.SpriteCache, name string, file string) {

@@ -64,6 +64,12 @@ func (tds *TextureDebugScreen) Draw(g *Game, screen *ebiten.Image) {
 
 	cabinet := tds.getAnimation(g, "bathroom_cabinet_white", 10, 10)
 	cabinet.Draw(screen, 32, 512-32)
+
+	reception, _ := g.SpriteCache.GetSprite("reception")
+	reception.Draw(screen, 64, 512-32)
+
+	bed, _ := g.SpriteCache.GetSprite("bed")
+	bed.Draw(screen, 128, 512-32)
 }
 
 func (tds *TextureDebugScreen) DrawRoomTiles(g *Game, screen *ebiten.Image, name string, ox float64, oy float64) {
