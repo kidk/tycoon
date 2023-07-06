@@ -71,8 +71,8 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 
 		ui: ui,
 
-		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, &engine.FloorGrid, 0, 0),
-		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, &engine.BuildingGrid, 0, 0),
+		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, engine.FloorGrid, 0, 0),
+		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, engine.BuildingGrid, 0, 0),
 
 		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 		keyboard: helpers.NewKeyboardHelper(),

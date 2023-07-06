@@ -8,8 +8,8 @@ const MAP_SIZE = 30
 
 type Engine struct {
 	// We have layers here that define ground, buildings, items, ..
-	FloorGrid    BlockGrid
-	BuildingGrid BlockGrid
+	FloorGrid    *BlockGrid
+	BuildingGrid *BlockGrid
 
 	// Pathfinding
 	GridPath *GridPath
@@ -36,7 +36,7 @@ func NewEngine(fps int) *Engine {
 		return false
 	})
 	grid.Process(buildings, func(block Block) bool {
-		return block.Type.Name == "wall_brown_up_left"
+		return block.IsBlocker()
 	})
 
 	return &Engine{
