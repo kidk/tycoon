@@ -17,8 +17,8 @@ func NewBasicMap(size int) (*BlockGrid, *BlockGrid, *BlockGrid) {
 
 	buildHouse(buildings, 5, 10, 7)
 	buildHouse(buildings, 5-1+7, 12, 5)
-	buildHouse(buildings, 5-1+7+5, 12, 5)
-	buildHouse(buildings, 5-1+7+5+5, 12, 5)
+	buildHouse(buildings, 5-2+7+5, 12, 5)
+	buildHouse(buildings, 5-3+7+5+5, 12, 5)
 
 	items := NewGrid(size)
 	items.FillGrid(func(x int, y int) string {

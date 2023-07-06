@@ -3,8 +3,9 @@ package engine
 import "fmt"
 
 type Block struct {
-	x int
-	y int
+	name string
+	x    int
+	y    int
 
 	GetTexture func(*BlockGrid) string
 
@@ -17,8 +18,9 @@ type Type struct {
 
 func BlockFactory(x int, y int, name string) *Block {
 	return &Block{
-		x: x,
-		y: y,
+		name: name,
+		x:    x,
+		y:    y,
 
 		GetTexture: func(grid *BlockGrid) string {
 			return name
@@ -31,13 +33,32 @@ func BlockFactory(x int, y int, name string) *Block {
 
 func WallFactory(x int, y int, name string) *Block {
 	return &Block{
-		x: x,
-		y: y,
+		name: name,
+		x:    x,
+		y:    y,
 
 		GetTexture: func(grid *BlockGrid) string {
 			// up_left, up_middle, up_right, middle_left, middle_right, down
+			top := y-1 > 0 && len(grid.Blocks[x][y-1].name) > 4 && grid.Blocks[x][y-1].name[0:4] == "wall"
+			down := y+1 < len(grid.Blocks) && len(grid.Blocks[x][y+1].name) > 4 && grid.Blocks[x][y+1].name[0:4] == "wall"
+			left := x-1 > 0 && len(grid.Blocks[x-1][y].name) > 4 && grid.Blocks[x-1][y].name[0:4] == "wall"
+			right := x+1 < len(grid.Blocks) && len(grid.Blocks[x+1][y].name) > 4 && grid.Blocks[x+1][y].name[0:4] == "wall"
 
-			return fmt.Sprintf("wall_%s_down", name)
+			direction := "down"
+			if !top && down && !left && right {
+				direction = "up_left"
+			}
+			if left && right {
+				direction = "up_middle"
+			}
+			if !top && down && left && !right {
+				direction = "up_right"
+			}
+			if !left && !right {
+				direction = "middle_right"
+			}
+
+			return fmt.Sprintf("wall_%s_%s", name[5:], direction)
 		},
 		IsBlocker: func() bool {
 			return true

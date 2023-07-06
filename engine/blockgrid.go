@@ -17,7 +17,7 @@ func NewGrid(size int) *BlockGrid {
 
 func (g *BlockGrid) Set(x int, y int, name string) {
 	if len(name) > 6 && name[0:4] == "wall" {
-		g.Blocks[x][y] = *WallFactory(x, y, name[5:])
+		g.Blocks[x][y] = *WallFactory(x, y, name)
 		return
 	}
 	g.Blocks[x][y] = *BlockFactory(x, y, name)
