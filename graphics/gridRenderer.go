@@ -12,8 +12,8 @@ type GridRenderer struct {
 	ty          int
 }
 
-func NewGridRenderer(spriteCache *SpriteCache, grid *engine.BlockGrid, tx int, ty int) GridRenderer {
-	return GridRenderer{
+func NewGridRenderer(spriteCache *SpriteCache, grid *engine.BlockGrid, tx int, ty int) *GridRenderer {
+	return &GridRenderer{
 		spriteCache: spriteCache,
 		grid:        grid,
 		tx:          tx,
@@ -26,12 +26,13 @@ func (gr *GridRenderer) Draw(screen *ebiten.Image) *ebiten.Image {
 	for x := 0; x < gr.grid.Size; x++ {
 		for y := 0; y < gr.grid.Size; y++ {
 			block := gr.grid.Blocks[x][y]
+			texture := block.GetTexture(gr.grid)
 
-			if block.Type.Name == "empty" {
+			if texture == "empty" {
 				continue
 			}
 
-			sprite, err := gr.spriteCache.GetSprite(block.Type.Name)
+			sprite, err := gr.spriteCache.GetSprite(texture)
 			if err != nil {
 				sprite, _ = gr.spriteCache.GetSprite("error")
 			}

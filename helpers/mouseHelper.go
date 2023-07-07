@@ -2,53 +2,74 @@ package helpers
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kidk/tycoon/engine"
+	"github.com/kidk/tycoon/graphics"
 )
 
 type MouseHelper struct {
-	pressed map[ebiten.MouseButton]bool
-	X, Y    float64
+	spriteCache graphics.SpriteCache
+
+	engine *engine.Engine
+
+	pressed      map[ebiten.MouseButton]bool
+	X, Y         float64
+	mouseTexture *graphics.Sprite
+
+	activeTexture *graphics.Sprite
+	activeName    string
+	activeType    string
 }
 
-func NewMouseHelper() *MouseHelper {
+func NewMouseHelper(spriteCache graphics.SpriteCache, engine *engine.Engine) *MouseHelper {
+	mouseTexture, _ := spriteCache.GetSprite("mouse")
+
 	return &MouseHelper{
-		pressed: make(map[ebiten.MouseButton]bool),
+		spriteCache: spriteCache,
+
+		engine: engine,
+
+		pressed:      make(map[ebiten.MouseButton]bool),
+		mouseTexture: mouseTexture,
 	}
 }
 
-func (kh *MouseHelper) IsKeyPressed(key ebiten.MouseButton) bool {
-	return ebiten.IsMouseButtonPressed(key)
-}
-
-func (kh *MouseHelper) IsKeyPressedOnce(key ebiten.MouseButton) bool {
-	isPressed := ebiten.IsMouseButtonPressed(key)
-
-	// If key does not exist in cache, create it we current value
-	if _, ok := kh.pressed[key]; !ok {
-		kh.pressed[key] = isPressed
-
-		// This is the first time we see this key, so let's return the current value
-		return isPressed
+func (kh *MouseHelper) Draw(screen *ebiten.Image) *ebiten.Image {
+	mouseImage := ebiten.NewImage(64, 64)
+	if kh.activeTexture != nil {
+		kh.activeTexture.Draw(mouseImage, 0, 0)
+	} else {
+		kh.mouseTexture.Draw(mouseImage, 0, 0)
 	}
 
-	// Save the previous value
-	wasPressed := kh.pressed[key]
-	result := false
-
-	// If key was not previously set, but is pressed now, return true for one time
-	if !wasPressed && isPressed {
-		result = true
-
-		// Update the cache
-		kh.pressed[key] = isPressed
-	}
-
-	return result
+	return mouseImage
 }
 
-func (kh *MouseHelper) Update() {
-	for key, pressed := range kh.pressed {
-		if pressed && !ebiten.IsMouseButtonPressed(key) {
-			kh.pressed[key] = false
+func (kh *MouseHelper) LeftClick() {
+	if kh.activeType != "" {
+		switch kh.activeType {
+		case "building":
+			kh.engine.BuildingGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
+		case "floor":
+			kh.engine.FloorGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
+		case "item":
+			kh.engine.ItemGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
 		}
+	} else {
+		kh.engine.MovePlayer(int(kh.X), int(kh.Y))
 	}
+}
+
+func (kh *MouseHelper) MiddleClick() {
+
+}
+
+func (kh *MouseHelper) RightClick() {
+	kh.activeTexture = nil
+	kh.activeType = ""
+}
+
+func (kh *MouseHelper) SetCursor(typ string, block string) {
+	kh.activeTexture, _ = kh.spriteCache.GetSprite(block)
+	kh.activeName = block
+	kh.activeType = typ
 }

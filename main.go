@@ -13,8 +13,10 @@ func main() {
 	logrus.SetLevel(logrus.TraceLevel)
 
 	logrus.Print("Setting window size and title")
-	ebiten.SetWindowSize(1680, 980)
+	ebiten.SetWindowSize(1440, 810)
 	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowPosition(0, 0)
+	ebiten.SetVsyncEnabled(false)
 	g := &Game{}
 
 	logrus.Print("Creating image & sprite cache")
@@ -27,7 +29,6 @@ func main() {
 	logrus.Print("Setting initial screen")
 	//g.Screen = NewTextureDebugScreen(&g.SpriteCache)
 	g.Screen = NewGameScreen(&g.SpriteCache)
-	//g.Screen = NewUITestScreen(&g.SpriteCache)
 
 	logrus.Print("Everything is ready, starting loops")
 	if err := ebiten.RunGame(g); err != nil {

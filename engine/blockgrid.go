@@ -5,8 +5,8 @@ type BlockGrid struct {
 	Blocks [][]Block
 }
 
-func NewGrid(size int) BlockGrid {
-	g := BlockGrid{Size: size}
+func NewGrid(size int) *BlockGrid {
+	g := &BlockGrid{Size: size}
 	g.Blocks = make([][]Block, size)
 	for i := 0; i < size; i++ {
 		g.Blocks[i] = make([]Block, size)
@@ -16,21 +16,17 @@ func NewGrid(size int) BlockGrid {
 }
 
 func (g *BlockGrid) Set(x int, y int, name string) {
-	b := Block{x: x, y: y}
-	b.Type = Type{
-		Name: name,
+	if len(name) > 6 && name[0:4] == "wall" {
+		g.Blocks[x][y] = *WallFactory(x, y, name)
+		return
 	}
-	g.Blocks[x][y] = b
+	g.Blocks[x][y] = *BlockFactory(x, y, name)
 }
 
 func (g *BlockGrid) FillGrid(nameFunc func(x int, y int) string) {
-	for i := 0; i < g.Size; i++ {
-		for j := 0; j < g.Size; j++ {
-			b := Block{x: i, y: j}
-			b.Type = Type{
-				Name: nameFunc(i, j),
-			}
-			g.Blocks[i][j] = b
+	for x := 0; x < g.Size; x++ {
+		for y := 0; y < g.Size; y++ {
+			g.Blocks[x][y] = *BlockFactory(x, y, nameFunc(x, y))
 		}
 	}
 }
