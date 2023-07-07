@@ -32,6 +32,10 @@ func LoadSprites(spriteCache *graphics.SpriteCache) {
 	// Objects
 	loadObjects(spriteCache)
 
+	// Zones
+	spriteCache.CreateSprite("zone_reception", "resources/zone_reception.png", 0, 0, 32, 32)
+	spriteCache.CreateSprite("zone_room", "resources/zone_room.png", 0, 0, 32, 32)
+
 	// Characters
 	loadCharacter(spriteCache, "adam", "resources/Adam_32x32.png")
 	loadCharacter(spriteCache, "alex", "resources/Alex_32x32.png")
@@ -64,7 +68,7 @@ func loadObjects(spriteCache *graphics.SpriteCache) {
 	spriteCache.CreateSprite("bathroom_cabinet_white", "resources/animated_bathroom_cabinet_white_empty_32x32.png", 0, 0, 32, 64)
 
 	genericFile := "resources/1_Generic_32x32.png"
-	spriteCache.CreateSprite("reception", genericFile, 0, 512, 64, 32+512)
+	spriteCache.CreateSprite("reception_desk", genericFile, 0, 512, 64, 32+512)
 	spriteCache.CreateSprite("bed", genericFile, 320, 1888, 32+320, 64+1888)
 }
 
