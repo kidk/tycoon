@@ -53,22 +53,69 @@ func (engine *Engine) Update() {
 	// Need a pointer here in order to pass-by-reference
 	// https://stackoverflow.com/questions/73494229/ineffective-assignment-to-field-when-trying-to-update-a-struct-in-go
 
-	// Only move ones every 60 seconds
+	if engine.count%engine.updateFPS == 0 {
+		// Reset count
+		engine.count = 0
+		// We are currently located on the "new" tile
+		engine.Player.From = engine.Player.To
+		// Continue to move if there is a next position
+		if len(engine.Player.PlayerPath) > 0 { // There is a future path
+			// Take first path and convert to Gridpather to get next X,Y variables
+			nextPos := engine.Player.PlayerPath[0].(GridPather) // https://yourbasic.org/golang/type-assertion-switch/
+			// Save this as the nextPosition
+			engine.Player.To = GridCoord{nextPos.X, nextPos.Y}
+			// Change array to remove nextPost from the PlayerPath
+			engine.Player.PlayerPath = engine.Player.PlayerPath[1:]
+
+			// Update Player state
+			engine.Player.UpdateState()
+		}
+	}
+
+	// Update count
 	engine.count += 1
+
+	// Update real time position
+	engine.Player.CurrentPos = FloatCoord{
+		float64(engine.Player.From.X) + float64(engine.Player.To.X-engine.Player.From.X)*float64(engine.count)/float64(engine.updateFPS), // X-coord
+		float64(engine.Player.From.Y) + float64(engine.Player.To.Y-engine.Player.From.Y)*float64(engine.count)/float64(engine.updateFPS), // Y-coord
+	}
+
+	// Only update the position of the Player ones every second (= FPS frames)
 	if engine.count%engine.updateFPS > 0 {
 		return
 	}
-	engine.count = 0
 
-	if len(engine.Player.PlayerPath) > 0 {
-		// take first path and convert to Gridpather to get X,Y variables
-		nextPos := engine.Player.PlayerPath[0].(GridPather) // https://yourbasic.org/golang/type-assertion-switch/
-		// move player to that location
-		engine.Player.X = nextPos.X
-		engine.Player.Y = nextPos.Y
-		// change array to remove current (new) position
-		engine.Player.PlayerPath = engine.Player.PlayerPath[1:]
-	}
+	/*
+		// Need a pointer here in order to pass-by-reference
+		// https://stackoverflow.com/questions/73494229/ineffective-assignment-to-field-when-trying-to-update-a-struct-in-go
+
+		if engine.count%engine.updateFPS == 0 {
+			// Reset count
+			engine.count = 0
+			// We are currently located on the "new" tile
+			engine.Player.X = engine.Player.NextX
+			engine.Player.Y = engine.Player.NextY
+			// Continue to move if there is a next position
+			if len(engine.Player.PlayerPath) > 0 { // There is a future path
+				// Take first path and convert to Gridpather to get next X,Y variables
+				nextPos := engine.Player.PlayerPath[0].(GridPather) // https://yourbasic.org/golang/type-assertion-switch/
+				// Save this as the nextPosition
+				engine.Player.NextX = nextPos.X
+				engine.Player.NextY = nextPos.Y
+				// Change array to remove nextPost from the PlayerPath
+				engine.Player.PlayerPath = engine.Player.PlayerPath[1:]
+			}
+		}
+
+		// Update count
+		engine.count += 1
+
+		// Only update the position of the Player ones every second (= FPS frames)
+		if engine.count%engine.updateFPS > 0 {
+			return
+		}
+	*/
 }
 
 func (engine *Engine) MovePlayer(x int, y int) {
@@ -77,7 +124,8 @@ func (engine *Engine) MovePlayer(x int, y int) {
 		return
 	}
 
-	from := engine.GridPath.Get(engine.Player.X, engine.Player.Y)
+	from := engine.GridPath.Get(engine.Player.To.X, engine.Player.To.Y) // We use the future position for new path, if Player is currently not moving the future position will be the same as current position
+	//from := engine.GridPath.Get(engine.Player.NextX, engine.Player.NextY)
 	to := engine.GridPath.Get(x, y)
 	logrus.WithFields(logrus.Fields{
 		"from": from,
