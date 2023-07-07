@@ -43,7 +43,7 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 	timing.Start("NewGameScreen")
 	defer timing.Stop("NewGameScreen")
 
-	engine := engine.NewEngine(ebiten.DefaultTPS)
+	engine := engine.NewEngine(ebiten.DefaultTPS / 2)
 	mouse := helpers.NewMouseHelper(*spriteCache, engine)
 
 	// Set up UI and mouse listener
