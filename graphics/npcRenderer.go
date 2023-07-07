@@ -56,6 +56,19 @@ func (gr *NPCRenderer) Draw(screen *ebiten.Image) *ebiten.Image {
 	// gr.spriteUp.Draw(image, float64(gr.tx), float64(gr.ty))
 	image := ebiten.NewImage(32, 64)
 	//gr.spriteIdle.Draw(image, float64(gr.tx), float64(gr.ty))
-	gr.spriteDown.Draw(image, float64(gr.tx), float64(gr.ty))
+	switch gr.npc.State {
+	default:
+		gr.spriteIdle.Draw(image, float64(gr.tx), float64(gr.ty))
+	case engine.Player_Idle:
+		gr.spriteIdle.Draw(image, float64(gr.tx), float64(gr.ty))
+	case engine.Player_MoveDown:
+		gr.spriteDown.Draw(image, float64(gr.tx), float64(gr.ty))
+	case engine.Player_MoveRight:
+		gr.spriteRight.Draw(image, float64(gr.tx), float64(gr.ty))
+	case engine.Player_MoveUp:
+		gr.spriteUp.Draw(image, float64(gr.tx), float64(gr.ty))
+	case engine.Player_MoveLeft:
+		gr.spriteLeft.Draw(image, float64(gr.tx), float64(gr.ty))
+	}
 	return image
 }

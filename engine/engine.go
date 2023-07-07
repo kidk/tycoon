@@ -1,8 +1,6 @@
 package engine
 
-import (
-	"github.com/sirupsen/logrus"
-)
+import "github.com/sirupsen/logrus"
 
 const MAP_SIZE = 30
 
@@ -65,20 +63,19 @@ func (engine *Engine) Update() {
 			// Take first path and convert to Gridpather to get next X,Y variables
 			nextPos := engine.Player.PlayerPath[0].(GridPather) // https://yourbasic.org/golang/type-assertion-switch/
 			// Save this as the nextPosition
-			engine.Player.To = GridCoord{nextPos.X, nextPos.Y}
+			engine.Player.To = &GridCoord{nextPos.X, nextPos.Y}
 			// Change array to remove nextPost from the PlayerPath
 			engine.Player.PlayerPath = engine.Player.PlayerPath[1:]
-
-			// Update Player state
-			engine.Player.UpdateState()
 		}
+		// Update Player state
+		engine.Player.UpdateState()
 	}
 
 	// Update count
 	engine.count += 1
 
 	// Update real time position
-	engine.Player.CurrentPos = FloatCoord{
+	engine.Player.CurrentPos = &FloatCoord{
 		float64(engine.Player.From.X) + float64(engine.Player.To.X-engine.Player.From.X)*float64(engine.count)/float64(engine.updateFPS), // X-coord
 		float64(engine.Player.From.Y) + float64(engine.Player.To.Y-engine.Player.From.Y)*float64(engine.count)/float64(engine.updateFPS), // Y-coord
 	}
