@@ -1,6 +1,6 @@
 package engine
 
-func NewBasicMap(size int) (*BlockGrid, *BlockGrid, *BlockGrid) {
+func NewBasicMap(size int) (*BlockGrid, *BlockGrid, *BlockGrid, *BlockGrid) {
 	floor := NewGrid(size)
 	floor.FillGrid(func(x int, y int) string {
 		name := "ground_grass"
@@ -25,7 +25,12 @@ func NewBasicMap(size int) (*BlockGrid, *BlockGrid, *BlockGrid) {
 		return "empty"
 	})
 
-	return floor, buildings, items
+	zones := NewGrid(size)
+	zones.FillGrid(func(x int, y int) string {
+		return "empty"
+	})
+
+	return floor, buildings, items, zones
 }
 
 func buildHouse(grid *BlockGrid, offsetX int, offsetY int, size int) {

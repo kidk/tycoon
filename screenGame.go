@@ -27,6 +27,7 @@ type GameScreen struct {
 	floorGridRenderer    *graphics.GridRenderer
 	buildingGridRenderer *graphics.GridRenderer
 	itemsGridRenderer    *graphics.GridRenderer
+	zonesGridRenderer    *graphics.GridRenderer
 
 	cam      *camera.Camera
 	keyboard *helpers.KeyboardHelper
@@ -75,6 +76,7 @@ func NewGameScreen(spriteCache *graphics.SpriteCache) Screen {
 		floorGridRenderer:    graphics.NewGridRenderer(spriteCache, engine.FloorGrid, 0, 0),
 		buildingGridRenderer: graphics.NewGridRenderer(spriteCache, engine.BuildingGrid, 0, 0),
 		itemsGridRenderer:    graphics.NewGridRenderer(spriteCache, engine.ItemGrid, 0, 0),
+		zonesGridRenderer:    graphics.NewGridRenderer(spriteCache, engine.ZoneGrid, 0, 0),
 
 		cam:      camera.NewCamera(1920, 1080, 500, 500, 0, 1),
 		keyboard: helpers.NewKeyboardHelper(),
@@ -173,6 +175,12 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 	player := tds.playerRenderer.Draw(screen)
 	tds.cam.Surface.DrawImage(player, tds.cam.GetTranslation(playerOps, (0+(tds.engine.Player.CurrentPos.X*32)), (-32+(tds.engine.Player.CurrentPos.Y*32)))) // correction because of unit size
 	defer player.Dispose()
+
+	// Draw zones
+	zoneOps := &ebiten.DrawImageOptions{}
+	zones := tds.zonesGridRenderer.Draw(screen)
+	tds.cam.Surface.DrawImage(zones, tds.cam.GetTranslation(zoneOps, 0, 0))
+	defer items.Dispose()
 
 	// Hightlight tile under mouse
 	mouseX, mouseY := tds.cam.GetCursorCoords()

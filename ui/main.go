@@ -139,7 +139,7 @@ func NewUITestScreen(spriteCache *graphics.SpriteCache, mouseListener func(event
 
 	footerContainer.AddChild(CreateButton("Reception zone", func(args *widget.ButtonClickedEventArgs) {
 		println("reception zone")
-		mouse.SetCursor("zone", "reception")
+		mouse.SetCursor("zone", "zone_reception")
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Reception desk", func(args *widget.ButtonClickedEventArgs) {
@@ -149,7 +149,7 @@ func NewUITestScreen(spriteCache *graphics.SpriteCache, mouseListener func(event
 
 	footerContainer.AddChild(CreateButton("Room zone", func(args *widget.ButtonClickedEventArgs) {
 		println("room zone")
-		mouse.SetCursor("zone", "room")
+		mouse.SetCursor("zone", "zone_room")
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Bed", func(args *widget.ButtonClickedEventArgs) {
