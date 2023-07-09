@@ -129,32 +129,32 @@ func NewUITestScreen(spriteCache *graphics.SpriteCache, mouseListener func(event
 	footerContainer.AddChild(CreateButton("Wall", func(args *widget.ButtonClickedEventArgs) {
 		println("wall clicked")
 		//buildingContainer.GetWidget().Hidden = !buildingContainer.GetWidget().Hidden
-		mouse.SetCursor("building", "wall_brown_up_middle")
+		mouse.SetCursor("building", "wall_brown_up_middle", false)
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Floor", func(args *widget.ButtonClickedEventArgs) {
 		println("floor clicked")
-		mouse.SetCursor("floor", "floor_wood_light")
+		mouse.SetCursor("floor", "floor_wood_light", true)
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Reception zone", func(args *widget.ButtonClickedEventArgs) {
 		println("reception zone")
-		mouse.SetCursor("zone", "zone_reception")
+		mouse.SetCursor("zone", "zone_reception", true)
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Reception desk", func(args *widget.ButtonClickedEventArgs) {
 		println("reception desk")
-		mouse.SetCursor("item", "reception_desk")
+		mouse.SetCursor("item", "reception_desk", false)
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Room zone", func(args *widget.ButtonClickedEventArgs) {
 		println("room zone")
-		mouse.SetCursor("zone", "zone_room")
+		mouse.SetCursor("zone", "zone_room", true)
 	}, buttonImage, face))
 
 	footerContainer.AddChild(CreateButton("Bed", func(args *widget.ButtonClickedEventArgs) {
 		println("bed")
-		mouse.SetCursor("item", "bed")
+		mouse.SetCursor("item", "bed", false)
 	}, buttonImage, face))
 
 	// footerContainer.AddChild(CreateButton("Testing", func(args *widget.ButtonClickedEventArgs) {

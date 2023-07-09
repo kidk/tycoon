@@ -17,6 +17,7 @@ type MouseHelper struct {
 	X, Y         float64
 	mouseTexture *graphics.Sprite
 
+	draggable              bool
 	dragging               bool
 	dragStartX, dragStartY float64
 	OffsetX, OffsetY       float64
@@ -81,25 +82,33 @@ func (kh *MouseHelper) LeftClick() {
 				for y := 0; y < int(sizeY); y++ {
 					xCorr := int(math.Min(kh.X, kh.dragStartX)) + x
 					yCorr := int(math.Min(kh.Y, kh.dragStartY)) + y
-					switch kh.activeType {
-					case "building":
-						kh.engine.BuildingGrid.Set(xCorr, yCorr, kh.activeName)
-					case "floor":
-						kh.engine.FloorGrid.Set(xCorr, yCorr, kh.activeName)
-					case "item":
-						kh.engine.ItemGrid.Set(xCorr, yCorr, kh.activeName)
-					case "zone":
-						kh.engine.ZoneGrid.Set(xCorr, yCorr, kh.activeName)
-					}
+					kh.setBlock(xCorr, yCorr)
 				}
 			}
 		} else {
-			kh.dragging = true
-			kh.dragStartX = kh.X
-			kh.dragStartY = kh.Y
+			if kh.draggable {
+				kh.dragging = true
+				kh.dragStartX = kh.X
+				kh.dragStartY = kh.Y
+			} else {
+				kh.setBlock(int(kh.X), int(kh.Y))
+			}
 		}
 	} else {
 		kh.engine.MovePlayer(int(kh.X), int(kh.Y))
+	}
+}
+
+func (kh *MouseHelper) setBlock(x int, y int) {
+	switch kh.activeType {
+	case "building":
+		kh.engine.BuildingGrid.Set(x, y, kh.activeName)
+	case "floor":
+		kh.engine.FloorGrid.Set(x, y, kh.activeName)
+	case "item":
+		kh.engine.ItemGrid.Set(x, y, kh.activeName)
+	case "zone":
+		kh.engine.ZoneGrid.Set(x, y, kh.activeName)
 	}
 }
 
@@ -112,8 +121,9 @@ func (kh *MouseHelper) RightClick() {
 	kh.activeType = ""
 }
 
-func (kh *MouseHelper) SetCursor(typ string, block string) {
+func (kh *MouseHelper) SetCursor(typ string, block string, draggable bool) {
 	kh.activeTexture, _ = kh.spriteCache.GetSprite(block)
 	kh.activeName = block
 	kh.activeType = typ
+	kh.draggable = draggable
 }
