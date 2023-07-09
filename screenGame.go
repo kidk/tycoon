@@ -189,7 +189,7 @@ func (tds *GameScreen) Draw(g *Game, screen *ebiten.Image) {
 
 	mouseOps := &ebiten.DrawImageOptions{}
 	mouse := tds.mouse.Draw(screen)
-	tds.cam.Surface.DrawImage(mouse, tds.cam.GetTranslation(mouseOps, tds.mouse.X*32, tds.mouse.Y*32))
+	tds.cam.Surface.DrawImage(mouse, tds.cam.GetTranslation(mouseOps, (tds.mouse.X-tds.mouse.OffsetX)*32, (tds.mouse.Y-tds.mouse.OffsetY)*32))
 	defer mouse.Dispose()
 
 	// Draw to screen and zoom

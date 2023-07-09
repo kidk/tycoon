@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"math"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kidk/tycoon/engine"
 	"github.com/kidk/tycoon/graphics"
@@ -14,6 +16,10 @@ type MouseHelper struct {
 	pressed      map[ebiten.MouseButton]bool
 	X, Y         float64
 	mouseTexture *graphics.Sprite
+
+	dragging               bool
+	dragStartX, dragStartY float64
+	OffsetX, OffsetY       float64
 
 	activeTexture *graphics.Sprite
 	activeName    string
@@ -34,11 +40,32 @@ func NewMouseHelper(spriteCache graphics.SpriteCache, engine *engine.Engine) *Mo
 }
 
 func (kh *MouseHelper) Draw(screen *ebiten.Image) *ebiten.Image {
-	mouseImage := ebiten.NewImage(64, 64)
+	mouseImage := ebiten.NewImage(512, 512)
 	if kh.activeTexture != nil {
 		kh.activeTexture.Draw(mouseImage, 0, 0)
 	} else {
 		kh.mouseTexture.Draw(mouseImage, 0, 0)
+	}
+
+	kh.OffsetX = 0.0
+	kh.OffsetY = 0.0
+
+	if kh.activeType != "" && kh.dragging {
+		sizeX := math.Abs(kh.X-kh.dragStartX) + 1
+		sizeY := math.Abs(kh.Y-kh.dragStartY) + 1
+
+		if kh.X > kh.dragStartX {
+			kh.OffsetX = kh.X - kh.dragStartX
+		}
+		if kh.Y > kh.dragStartY {
+			kh.OffsetY = kh.Y - kh.dragStartY
+		}
+
+		for x := 0.0; x < sizeX; x++ {
+			for y := 0.0; y < sizeY; y++ {
+				kh.activeTexture.Draw(mouseImage, x*32, y*32)
+			}
+		}
 	}
 
 	return mouseImage
@@ -46,15 +73,30 @@ func (kh *MouseHelper) Draw(screen *ebiten.Image) *ebiten.Image {
 
 func (kh *MouseHelper) LeftClick() {
 	if kh.activeType != "" {
-		switch kh.activeType {
-		case "building":
-			kh.engine.BuildingGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
-		case "floor":
-			kh.engine.FloorGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
-		case "item":
-			kh.engine.ItemGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
-		case "zone":
-			kh.engine.ZoneGrid.Set(int(kh.X), int(kh.Y), kh.activeName)
+		if kh.dragging {
+			kh.dragging = false
+			sizeX := math.Abs(kh.X-kh.dragStartX) + 1
+			sizeY := math.Abs(kh.Y-kh.dragStartY) + 1
+			for x := 0; x < int(sizeX); x++ {
+				for y := 0; y < int(sizeY); y++ {
+					xCorr := int(math.Min(kh.X, kh.dragStartX)) + x
+					yCorr := int(math.Min(kh.Y, kh.dragStartY)) + y
+					switch kh.activeType {
+					case "building":
+						kh.engine.BuildingGrid.Set(xCorr, yCorr, kh.activeName)
+					case "floor":
+						kh.engine.FloorGrid.Set(xCorr, yCorr, kh.activeName)
+					case "item":
+						kh.engine.ItemGrid.Set(xCorr, yCorr, kh.activeName)
+					case "zone":
+						kh.engine.ZoneGrid.Set(xCorr, yCorr, kh.activeName)
+					}
+				}
+			}
+		} else {
+			kh.dragging = true
+			kh.dragStartX = kh.X
+			kh.dragStartY = kh.Y
 		}
 	} else {
 		kh.engine.MovePlayer(int(kh.X), int(kh.Y))
